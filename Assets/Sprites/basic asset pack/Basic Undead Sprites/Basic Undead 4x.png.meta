@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 64e0260e19d00274ea0e57975a21d209
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3585266024333775541
+    second: Basic Undead 4x_0
+  - first:
+      213: -3182181989220851064
+    second: Basic Undead 4x_1
+  - first:
+      213: 2829568027489995328
+    second: Basic Undead 4x_2
+  - first:
+      213: 4886706735432902748
+    second: Basic Undead 4x_3
+  - first:
+      213: -2085949130428274722
+    second: Basic Undead 4x_4
+  - first:
+      213: 8170753524423433395
+    second: Basic Undead 4x_5
+  - first:
+      213: 7518812735456907219
+    second: Basic Undead 4x_6
+  - first:
+      213: -2685484975440392679
+    second: Basic Undead 4x_7
+  - first:
+      213: 5925251031409411514
+    second: Basic Undead 4x_8
+  - first:
+      213: 1619276524050071375
+    second: Basic Undead 4x_9
+  - first:
+      213: 4511845880356940946
+    second: Basic Undead 4x_10
+  - first:
+      213: -8100106558602502158
+    second: Basic Undead 4x_11
+  - first:
+      213: -1389818248878589236
+    second: Basic Undead 4x_12
+  - first:
+      213: 659887453048554618
+    second: Basic Undead 4x_13
+  - first:
+      213: 9145851755527421654
+    second: Basic Undead 4x_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Basic Undead 4x_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 147
+        width: 62
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b211bd147c61c130800000000000000
+      internalID: 3585266024333775541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_1
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 147
+        width: 66
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88268d9375e96d3d0800000000000000
+      internalID: -3182181989220851064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_2
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 147
+        width: 62
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04a085a1125a44720800000000000000
+      internalID: 2829568027489995328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_3
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 147
+        width: 42
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c58acfe82e111d340800000000000000
+      internalID: 4886706735432902748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_4
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 147
+        width: 42
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed7a94551583d03e0800000000000000
+      internalID: -2085949130428274722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_5
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 83
+        width: 58
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bc978a3a09546170800000000000000
+      internalID: 8170753524423433395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_6
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 79
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df8795b850385860800000000000000
+      internalID: 7518812735456907219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_7
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 79
+        width: 42
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91e0a35a4ad3bbad0800000000000000
+      internalID: -2685484975440392679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_8
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 75
+        width: 46
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab5cc247b68ba3250800000000000000
+      internalID: 5925251031409411514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_9
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 75
+        width: 54
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4f32295b63d87610800000000000000
+      internalID: 1619276524050071375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_10
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 66
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c2cf36ceb4d9e30800000000000000
+      internalID: 4511845880356940946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_11
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 3
+        width: 58
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ff9fab4004a69f80800000000000000
+      internalID: -8100106558602502158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_12
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 3
+        width: 58
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cca7c3d8aaf56bce0800000000000000
+      internalID: -1389818248878589236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_13
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 3
+        width: 50
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7442be6424682900800000000000000
+      internalID: 659887453048554618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic Undead 4x_14
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 3
+        width: 42
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6de389007b79cee70800000000000000
+      internalID: 9145851755527421654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Basic Undead 4x_0: 3585266024333775541
+      Basic Undead 4x_1: -3182181989220851064
+      Basic Undead 4x_10: 4511845880356940946
+      Basic Undead 4x_11: -8100106558602502158
+      Basic Undead 4x_12: -1389818248878589236
+      Basic Undead 4x_13: 659887453048554618
+      Basic Undead 4x_14: 9145851755527421654
+      Basic Undead 4x_2: 2829568027489995328
+      Basic Undead 4x_3: 4886706735432902748
+      Basic Undead 4x_4: -2085949130428274722
+      Basic Undead 4x_5: 8170753524423433395
+      Basic Undead 4x_6: 7518812735456907219
+      Basic Undead 4x_7: -2685484975440392679
+      Basic Undead 4x_8: 5925251031409411514
+      Basic Undead 4x_9: 1619276524050071375
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
