@@ -815,6 +815,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbb957f9a372a0049abf77d263b87b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EntityList:
+  - {fileID: 1514691301}
+  - {fileID: 1941592569}
 --- !u!4 &562852339
 Transform:
   m_ObjectHideFlags: 0
@@ -1814,8 +1817,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1514691303}
   - component: {fileID: 1514691302}
+  - component: {fileID: 1514691304}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1864,8 +1868,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -6182296104549173301, guid: 185ea53ad126a3447b46f8be02cffe43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1886,11 +1890,23 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.85069, y: 4.71476, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514691304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514691301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9926331bda4e69b4c8b68b69cb03d251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1941592569
 GameObject:
   m_ObjectHideFlags: 0
