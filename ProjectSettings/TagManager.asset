@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Grid
   - Walls
+  - FloorTilemap
+  - Enemy
+  - TileHighlighter
   layers:
   - Default
   - TransparentFX

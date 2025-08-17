@@ -18,7 +18,8 @@ csharp_new_line_before_catch = false
 csharp_new_line_before_finally = false
 csharp_style_require_braces = false
 csharp_style_require_braces = false:suggestion
-
+csharp_max_line_length = 73
+max_line_length = 73
 
 # --------------------
 # Einrückung und Klammern

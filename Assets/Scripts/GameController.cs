@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
+using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
@@ -9,24 +13,36 @@ public class GameController : MonoBehaviour {
     private int mapSizeX;
     private int mapSizeY;
     private int currentTurn;
-
-    [SerializeField]
-    private List<GameObject> EntityList;
+    [SerializeField] private GameObject[] enemyList;
     private Tilemap wallTilemap;
     private BoundsInt bounds;
+    private Camera mainCam;
+    private Tilemap targetTilemap;
+    [SerializeField] private int playerDamage;
+    private GameObject tileHighlighter;
 
     private void Awake() {  // <=== Awake gets called before start()
         wallTilemap = GameObject.FindGameObjectWithTag("Walls").GetComponent<Tilemap>();
-
+        enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+        targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
+        tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
         bounds = wallTilemap.cellBounds;
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
         currentTurn = 1;
-        tilesArray = new int[mapSizeX, mapSizeY];
+        tilesArray = new int[mapSizeX + 1, mapSizeY];
         ClearTilesArray();
         Debug.Log(mapSizeX + " " + mapSizeY);
         GetObstaclesFromGrid();
         PrintTilesArray();
+
+        mainCam = Camera.main;
+    }
+
+    private void Start() { }
+
+    private void Update() {
+        PlayerAttack();
     }
 
     private void ClearTilesArray() {
@@ -66,33 +82,59 @@ public class GameController : MonoBehaviour {
         return tilesArray[x, y] == 0;
     }
 
+    public int GetTileValue(int x, int y) {
+        return tilesArray[x, y];
+    }
+
     public Vector3 TileToWorldCoordinate(int x, int y) {
         return new Vector3(x + bounds.xMin, mapSizeY - 1 - y + bounds.yMin, 0);
     }
 
-    public Vector2 LocatePlayer() {
+    public Vector2Int WorldToTileCoordinate(Vector3 worldPos) {
+        int x = Mathf.RoundToInt(worldPos.x - bounds.xMin);
+        int y = Mathf.RoundToInt(mapSizeY - 1 - ( worldPos.y - bounds.yMin ));
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2Int LocatePlayer() {
         for (int x = 0; x < mapSizeX; x++) {
             for (int y = 0; y < mapSizeY; y++) {
                 if (tilesArray[x, y] == 1) {
-                    return new Vector2(x, y);
+                    return new Vector2Int(x, y);
                 }
             }
         }
-        return new Vector2(-1, -1); //Incase Player is not on current map? 
+        return new Vector2Int(-1, -1); //Incase Player is not on current map? 
     }
 
     public bool IsMyTurn(int type) {
         return type == 1 && currentTurn % 2 == 1 || type == 2 && currentTurn % 2 == 0;
     }
 
-    public void IncreaseTurn() {
-        currentTurn++;
-        //Debug.Log(currentTurn);
+    public void NextTurn() {
         ResetHasMovedThisTurn();
+        currentTurn++;
+        Debug.Log(currentTurn);
+        ResetHasMovedThisTurn();
+        if (IsMyTurn(2)) {
+            EnemyMoves();
+        }
+    }
+
+    private void EnemyMoves() {
+        foreach (GameObject enemy in enemyList) {
+            EnemyController controller = enemy.GetComponent<EnemyController>();
+            Debug.Log(controller.GetIsAlive());
+            if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
+                Debug.Log("Moved Enemy");
+                controller.Movement();
+            }
+        }
+        NextTurn();
     }
 
     private void ResetHasMovedThisTurn() {
-        foreach (GameObject entity in EntityList) {
+        foreach (GameObject entity in enemyList) {
             entity.GetComponent<EntityController>().SetHasMovedThisTurn(false);
         }
     }
@@ -107,9 +149,41 @@ public class GameController : MonoBehaviour {
                 int arrayX = pos.x - bounds.xMin;
                 int arrayY = pos.y - bounds.yMin;
                 arrayY = mapSizeY - 1 - arrayY;
-                SetTile(arrayX, arrayY, 4);
+                SetTile(arrayX + 1, arrayY, 4);
             }
         }
     }
 
+    private int GetDistanceToTile(int startX, int startY, int endX, int endY) {
+        return Math.Abs(startX - endX) + Math.Abs(startY - endY);
+    }
+
+
+    private void PlayerAttack() {
+        int attackDistance = 1;
+        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2 && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
+            foreach (GameObject enemy in enemyList) {
+                EnemyController controller = enemy.GetComponent<EnemyController>();
+                if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.getXY().x, controller.getXY().y) == attackDistance
+                    && controller.getXY().x == GetTileHoveredByMouse().x && controller.getXY().y == GetTileHoveredByMouse().y) {
+                    controller.AdjustHealth(-playerDamage);
+                }
+            }
+        }
+    }
+
+    public Vector2Int GetTileHoveredByMouse() {
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+        Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, mainCam.nearClipPlane));
+        Vector3Int cellPos = targetTilemap.WorldToCell(mouseWorldPos);
+
+        Vector3 cellCenterPos = targetTilemap.GetCellCenterWorld(cellPos);
+        tileHighlighter.transform.position = cellCenterPos;
+
+        Vector2Int arrayPos = WorldToTileCoordinate(tileHighlighter.transform.position);
+
+        arrayPos.x = Mathf.Clamp(arrayPos.x, 0, mapSizeX - 1);
+        arrayPos.y = Mathf.Clamp(arrayPos.y, 0, mapSizeY - 1);
+        return new Vector2Int(arrayPos.x, arrayPos.y);
+    }
 }

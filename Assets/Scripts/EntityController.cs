@@ -1,5 +1,6 @@
 using System;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class EntityController : MonoBehaviour {
@@ -7,18 +8,20 @@ public abstract class EntityController : MonoBehaviour {
     protected GameController gameController;
     [SerializeField] protected int x, y;
     protected int type;
-    protected bool hasMovedThisTurn;
-    protected int health;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected abstract void Movement();
+    [SerializeField] protected bool hasMovedThisTurn;
+    [SerializeField] protected int health;
+    protected bool isAlive;
+    public abstract void Movement();
     protected abstract void Attack();
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         hasMovedThisTurn = false;
+        isAlive = true;
     }
 
     protected void UpdatePosition(int x, int y) {
         transform.position = gameController.TileToWorldCoordinate(x, y);
+        Debug.Log("Set Enemy to: " + x + y);
     }
     protected void Move(int dx, int dy, int type) {
         int newX = x + dx;
@@ -32,13 +35,32 @@ public abstract class EntityController : MonoBehaviour {
             gameController.SetTile(x, y, type);
             UpdatePosition(x, y);
             hasMovedThisTurn = true;
-            gameController.IncreaseTurn();
             gameController.PrintTilesArray();
+
+            if (type == 1) {
+                gameController.NextTurn();
+            }
         }
     }
 
     public void SetHasMovedThisTurn(bool b) {
         hasMovedThisTurn = b;
+    }
+
+    public bool GetHasMovedThisTurn() {
+        return hasMovedThisTurn;
+    }
+
+    public Vector2Int getXY() {
+        return new Vector2Int(x, y);
+    }
+
+    public void AdjustHealth(int adjust) {
+        health += adjust;
+    }
+
+    public bool GetIsAlive() {
+        return isAlive;
     }
 
 }
