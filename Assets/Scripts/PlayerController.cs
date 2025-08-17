@@ -6,8 +6,9 @@ using UnityEngine.Scripting.APIUpdating;
 
 public class PlayerController : EntityController {
     private void Start() {
-        x = 0;
-        y = 0;
+        //REMINDER: x and y needs to be adjusted if the Grid got changed by alot (idk how to fix this)
+        x = 3;
+        y = 8;
         gameController.SetTile(x, y, 1);
         UpdatePosition(x, y);
         type = 1;

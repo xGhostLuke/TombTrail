@@ -2,25 +2,36 @@ using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Tilemaps;
 
 public class GameController : MonoBehaviour {
     public int[,] tilesArray;
-    private int mapSize;
+    private int mapSizeX;
+    private int mapSizeY;
     private int currentTurn;
 
     [SerializeField]
     private List<GameObject> EntityList;
+    private Tilemap wallTilemap;
+    private BoundsInt bounds;
 
     private void Awake() {  // <=== Awake gets called before start()
-        mapSize = 8;
+        wallTilemap = GameObject.FindGameObjectWithTag("Walls").GetComponent<Tilemap>();
+
+        bounds = wallTilemap.cellBounds;
+        mapSizeX = bounds.size.x;
+        mapSizeY = bounds.size.y;
         currentTurn = 1;
-        tilesArray = new int[mapSize, mapSize];
+        tilesArray = new int[mapSizeX, mapSizeY];
         ClearTilesArray();
+        Debug.Log(mapSizeX + " " + mapSizeY);
+        GetObstaclesFromGrid();
+        PrintTilesArray();
     }
 
     private void ClearTilesArray() {
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
+        for (int i = 0; i < mapSizeX; i++) {
+            for (int j = 0; j < mapSizeY; j++) {
                 tilesArray[i, j] = 0;
             }
         }
@@ -28,8 +39,8 @@ public class GameController : MonoBehaviour {
 
     public void PrintTilesArray() {
         string output = "";
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
+        for (int i = 0; i < mapSizeY; i++) {
+            for (int j = 0; j < mapSizeX; j++) {
                 output += tilesArray[j, i] + " ";
             }
             output += "\n";
@@ -48,7 +59,7 @@ public class GameController : MonoBehaviour {
     }
 
     public bool IsValidTile(int x, int y) {
-        return x >= 0 && x < mapSize && y >= 0 && y < mapSize;
+        return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
     public bool IsTileEmpty(int x, int y) {
@@ -56,12 +67,12 @@ public class GameController : MonoBehaviour {
     }
 
     public Vector3 TileToWorldCoordinate(int x, int y) {
-        return new Vector3(x, mapSize - 1 - y, 0);
+        return new Vector3(x + bounds.xMin, mapSizeY - 1 - y + bounds.yMin, 0);
     }
 
     public Vector2 LocatePlayer() {
-        for (int x = 0; x < mapSize; x++) {
-            for (int y = 0; y < mapSize; y++) {
+        for (int x = 0; x < mapSizeX; x++) {
+            for (int y = 0; y < mapSizeY; y++) {
                 if (tilesArray[x, y] == 1) {
                     return new Vector2(x, y);
                 }
@@ -76,13 +87,28 @@ public class GameController : MonoBehaviour {
 
     public void IncreaseTurn() {
         currentTurn++;
-        Debug.Log(currentTurn);
+        //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
     }
 
     private void ResetHasMovedThisTurn() {
         foreach (GameObject entity in EntityList) {
             entity.GetComponent<EntityController>().SetHasMovedThisTurn(false);
+        }
+    }
+
+    private void GetObstaclesFromGrid() {
+        mapSizeX = bounds.size.x;
+        mapSizeY = bounds.size.y;
+        tilesArray = new int[mapSizeX, mapSizeY];
+
+        foreach (var pos in bounds.allPositionsWithin) {
+            if (wallTilemap.HasTile(pos)) {
+                int arrayX = pos.x - bounds.xMin;
+                int arrayY = pos.y - bounds.yMin;
+                arrayY = mapSizeY - 1 - arrayY;
+                SetTile(arrayX, arrayY, 4);
+            }
         }
     }
 

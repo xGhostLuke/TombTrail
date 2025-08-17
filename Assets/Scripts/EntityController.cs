@@ -33,7 +33,7 @@ public abstract class EntityController : MonoBehaviour {
             UpdatePosition(x, y);
             hasMovedThisTurn = true;
             gameController.IncreaseTurn();
-            //gameController.PrintTilesArray();
+            gameController.PrintTilesArray();
         }
     }
 
