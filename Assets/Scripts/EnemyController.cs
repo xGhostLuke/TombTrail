@@ -9,8 +9,6 @@ public class EnemyController : EntityController {
     }
 
     private void Start() {
-        x = 7;
-        y = 7;
         gameController.SetTile(x, y, 2);
         UpdatePosition(x, y);
         type = 2;

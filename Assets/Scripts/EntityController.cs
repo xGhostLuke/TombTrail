@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EntityController : MonoBehaviour {
 
     protected GameController gameController;
-    protected int x, y;
+    [SerializeField] protected int x, y;
     protected int type;
     protected bool hasMovedThisTurn;
     protected int health;
