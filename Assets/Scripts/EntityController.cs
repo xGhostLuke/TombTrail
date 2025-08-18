@@ -6,15 +6,18 @@ using UnityEngine;
 public abstract class EntityController : MonoBehaviour {
 
     protected GameController gameController;
+    [SerializeField] protected PlayerController playerController;
     [SerializeField] protected int x, y;
     protected int type;
     [SerializeField] protected bool hasMovedThisTurn;
     [SerializeField] protected int health;
     protected bool isAlive;
+    [SerializeField] protected int attackDamage;
     public abstract void Movement();
-    protected abstract void Attack();
+    public abstract void Attack();
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         hasMovedThisTurn = false;
         isAlive = true;
     }
@@ -24,6 +27,10 @@ public abstract class EntityController : MonoBehaviour {
         Debug.Log("Set Enemy to: " + x + y);
     }
     protected void Move(int dx, int dy, int type) {
+        if (dx == 0 && dy == 0) {
+            gameController.NextTurn();
+        }
+
         int newX = x + dx;
         int newY = y + dy;
         //Debug.Log("Pos of Type: " + type + " is \n " + x + " " + y);
@@ -35,7 +42,7 @@ public abstract class EntityController : MonoBehaviour {
             gameController.SetTile(x, y, type);
             UpdatePosition(x, y);
             hasMovedThisTurn = true;
-            gameController.PrintTilesArray();
+            //gameController.PrintTilesArray();
 
             if (type == 1) {
                 gameController.NextTurn();
@@ -59,8 +66,16 @@ public abstract class EntityController : MonoBehaviour {
         health += adjust;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     public bool GetIsAlive() {
         return isAlive;
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
     }
 
 }

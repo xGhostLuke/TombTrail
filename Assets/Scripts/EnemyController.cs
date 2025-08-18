@@ -6,6 +6,7 @@ public class EnemyController : EntityController {
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Start() {
@@ -32,7 +33,7 @@ public class EnemyController : EntityController {
             else if (playerPos.x < x) Move(-1, 0, type);
         }
     }
-    protected override void Attack() {
-        gameController.NextTurn();
+    override public void Attack() {
+        playerController.AdjustHealth(-attackDamage);
     }
 }

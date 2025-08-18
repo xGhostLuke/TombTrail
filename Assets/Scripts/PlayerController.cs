@@ -26,9 +26,10 @@ public class PlayerController : EntityController {
         if (Keyboard.current.sKey.wasPressedThisFrame) Move(0, 1, type);
         if (Keyboard.current.dKey.wasPressedThisFrame) Move(1, 0, type);
         if (Keyboard.current.aKey.wasPressedThisFrame) Move(-1, 0, type);
+        if (Keyboard.current.spaceKey.wasPressedThisFrame) Move(0, 0, type);
     }
 
-    protected override void Attack() => throw new NotImplementedException();
+    override public void Attack() => throw new NotImplementedException();
 
 
 }

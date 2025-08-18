@@ -100,7 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9926331bda4e69b4c8b68b69cb03d251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   x: 15
   y: 15
   hasMovedThisTurn: 0
   health: 10
+  attackDamage: 10

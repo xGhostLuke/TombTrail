@@ -9,6 +9,7 @@ TagManager:
   - FloorTilemap
   - Enemy
   - TileHighlighter
+  - InteractionLogText
   layers:
   - Default
   - TransparentFX

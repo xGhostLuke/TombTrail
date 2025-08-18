@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class TileHighlighter : MonoBehaviour {
-    private GameController gameController;
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameController gameController;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -18,10 +18,16 @@ public class TileHighlighter : MonoBehaviour {
     }
 
     private void SnapToGrid() {
-        if (gameController.GetTileValue(gameController.GetTileHoveredByMouse().x, gameController.GetTileHoveredByMouse().y) == 2) {
-            spriteRenderer.color = new Color(1f, 0f, 0f, 0.27f);
-        } else {
-            spriteRenderer.color = new Color(0.55f, 0.55f, 0.55f, 0.27f);
+        try {
+            Vector2Int hoveredTile = gameController.GetTileHoveredByMouse();
+            if (gameController.GetTileValue(hoveredTile.x, hoveredTile.y) == 2) {
+                spriteRenderer.color = new Color(1f, 0f, 0f, 0.27f);
+            } else {
+                spriteRenderer.color = new Color(0.55f, 0.55f, 0.55f, 0.27f);
+            }
+        } catch (NullReferenceException) {
+            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+            Debug.Log("Tried Setting GameController");
         }
     }
 }
