@@ -127,7 +127,7 @@ public class GameController : MonoBehaviour {
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
                     if (GetDistanceToTile(playerPos.x, playerPos.y, controller.getXY().x, controller.getXY().y) == 1) {
                         controller.Attack();
-                        interactionLogText.AddTextToLog("Enemy attcked Player for: " + controller.getAttackDamage());
+                        interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.getAttackDamage());
                     } else {
                         controller.Movement();
                     }
@@ -170,7 +170,7 @@ public class GameController : MonoBehaviour {
                 if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.getXY().x, controller.getXY().y) == attackDistance
                     && controller.getXY().x == GetTileHoveredByMouse().x && controller.getXY().y == GetTileHoveredByMouse().y) {
                     controller.AdjustHealth(-playerDamage);
-                    interactionLogText.AddTextToLog("Player attcked Enemy for: " + playerDamage);
+                    interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerDamage);
                 }
             }
         }
