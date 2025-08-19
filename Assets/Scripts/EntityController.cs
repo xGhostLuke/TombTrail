@@ -3,7 +3,8 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class EntityController : MonoBehaviour {
+public abstract class EntityController : MonoBehaviour
+{
 
     protected GameController gameController;
     [SerializeField] protected PlayerController playerController;
@@ -13,68 +14,88 @@ public abstract class EntityController : MonoBehaviour {
     [SerializeField] protected int health;
     protected bool isAlive;
     [SerializeField] protected int attackDamage;
+
     public abstract void Movement();
+
     public abstract void Attack();
-    private void Awake() {
+
+    private void Awake()
+    {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         hasMovedThisTurn = false;
         isAlive = true;
     }
 
-    protected void UpdatePosition(int x, int y) {
+    protected void UpdatePosition(int x, int y)
+    {
         transform.position = gameController.TileToWorldCoordinate(x, y);
         Debug.Log("Set Enemy to: " + x + y);
     }
-    protected void Move(int dx, int dy, int type) {
-        if (dx == 0 && dy == 0) {
+    protected void Move(int dx, int dy, int type)
+    {
+        if (dx == 0 && dy == 0)
+        {
             gameController.NextTurn();
         }
 
         int newX = x + dx;
         int newY = y + dy;
         //Debug.Log("Pos of Type: " + type + " is \n " + x + " " + y);
-        if (gameController.IsValidTile(newX, newY) && gameController.IsTileEmpty(newX, newY)) {
-            gameController.SetTile(x, y, 0);
-            //Debug.Log("Set Tile " + x + y + "to 0");
-            x = newX;
-            y = newY;
-            gameController.SetTile(x, y, type);
-            UpdatePosition(x, y);
-            hasMovedThisTurn = true;
-            //gameController.PrintTilesArray();
 
-            if (type == 1) {
-                gameController.NextTurn();
-            }
+        bool isValidTile = gameController.IsValidTile(newX, newY);
+        bool isEmtpyTile = gameController.IsTileEmpty(newX, newY);
+        bool moveAllowed = isValidTile && isEmtpyTile;
+
+        if (!moveAllowed) return;
+
+        gameController.SetTile(x, y, 0);
+        //Debug.Log("Set Tile " + x + y + "to 0");
+        x = newX;
+        y = newY;
+        gameController.SetTile(x, y, type);
+        UpdatePosition(x, y);
+        hasMovedThisTurn = true;
+        //gameController.PrintTilesArray();
+
+        if (type == 1)
+        {
+            gameController.NextTurn();
         }
     }
 
-    public void SetHasMovedThisTurn(bool b) {
+    public void SetHasMovedThisTurn(bool b)
+    {
         hasMovedThisTurn = b;
     }
 
-    public bool GetHasMovedThisTurn() {
+    public bool GetHasMovedThisTurn()
+    {
         return hasMovedThisTurn;
     }
 
-    public Vector2Int getXY() {
+    public Vector2Int GetXY()
+    {
         return new Vector2Int(x, y);
     }
 
-    public void AdjustHealth(int adjust) {
+    public void AdjustHealth(int adjust)
+    {
         health += adjust;
     }
 
-    public int getHealth() {
+    public int GetHealth()
+    {
         return health;
     }
 
-    public bool GetIsAlive() {
+    public bool GetIsAlive()
+    {
         return isAlive;
     }
 
-    public int getAttackDamage() {
+    public int GetAttackDamage()
+    {
         return attackDamage;
     }
 

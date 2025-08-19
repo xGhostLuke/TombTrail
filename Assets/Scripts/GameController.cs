@@ -8,8 +8,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
-public class GameController : MonoBehaviour {
-    public int[,] tilesArray;
+public class GameController : MonoBehaviour
+{
+    public TileType[,] tilesArray;
     private int mapSizeX;
     private int mapSizeY;
     private int currentTurn;
@@ -23,7 +24,8 @@ public class GameController : MonoBehaviour {
     private InteractionLogTextScript interactionLogText;
     //private PlayerController playerController;
 
-    private void Awake() {  // <=== Awake gets called before start()
+    private void Awake()
+    {
         mainCam = Camera.main;
         wallTilemap = GameObject.FindGameObjectWithTag("Walls").GetComponent<Tilemap>();
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
@@ -46,22 +48,29 @@ public class GameController : MonoBehaviour {
 
     private void Start() { }
 
-    private void Update() {
+    private void Update()
+    {
         PlayerAttack();
     }
 
-    private void ClearTilesArray() {
-        for (int i = 0; i < mapSizeX; i++) {
-            for (int j = 0; j < mapSizeY; j++) {
-                tilesArray[i, j] = 0;
+    private void ClearTilesArray()
+    {
+        for (int i = 0; i < mapSizeX; i++)
+        {
+            for (int j = 0; j < mapSizeY; j++)
+            {
+                tilesArray[i, j] = TileType.Empty;
             }
         }
     }
 
-    public void PrintTilesArray() {
+    public void PrintTilesArray()
+    {
         string output = "";
-        for (int i = 0; i < mapSizeY; i++) {
-            for (int j = 0; j < mapSizeX; j++) {
+        for (int i = 0; i < mapSizeY; i++)
+        {
+            for (int j = 0; j < mapSizeX; j++)
+            {
                 output += tilesArray[j, i] + " ";
             }
             output += "\n";
@@ -69,114 +78,177 @@ public class GameController : MonoBehaviour {
         Debug.Log("1 = Player, 2 = Enemy, 3 = Item, 4 = Obstacle\nCurrent Tiles Array:\n" + output);
     }
 
-    public void SetTile(int x, int y, int value) {
-        // 1 = Player 
-        // 2 = Enemy 
-        // 3 = Item
-        // 4 = Obstacle
-        if (IsValidTile(x, y)) {
-            tilesArray[x, y] = value;
-        }
+    public void SetTile(int x, int y, TileType tileType)
+    {
+        if (!IsValidTile(x, y)) return;
+
+        tilesArray[x, y] = tileType;
     }
 
-    public bool IsValidTile(int x, int y) {
+    public bool IsValidTile(int x, int y)
+    {
         return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
-    public bool IsTileEmpty(int x, int y) {
-        return tilesArray[x, y] == 0;
+    public bool IsTileEmpty(int x, int y)
+    {
+        return tilesArray[x, y] == TileType.Empty;
     }
 
-    public int GetTileValue(int x, int y) {
+    public int GetTileValue(int x, int y)
+    {
         return tilesArray[x, y];
     }
 
-    public Vector3 TileToWorldCoordinate(int x, int y) {
+    public Vector3 TileToWorldCoordinate(int x, int y)
+    {
         return new Vector3(x + bounds.xMin, mapSizeY - 1 - y + bounds.yMin, 0);
     }
 
-    public Vector2Int WorldToTileCoordinate(Vector3 worldPos) {
+    public Vector2Int WorldToTileCoordinate(Vector3 worldPos)
+    {
         int x = Mathf.RoundToInt(worldPos.x - bounds.xMin);
-        int y = Mathf.RoundToInt(mapSizeY - 1 - ( worldPos.y - bounds.yMin ));
+        int y = Mathf.RoundToInt(mapSizeY - 1 - (worldPos.y - bounds.yMin));
         return new Vector2Int(x, y);
     }
 
-    public Vector2Int LocatePlayer() {
-        for (int x = 0; x < mapSizeX; x++) {
-            for (int y = 0; y < mapSizeY; y++) {
-                if (tilesArray[x, y] == 1) {
-                    return new Vector2Int(x, y);
-                }
+    public Vector2Int LocatePlayer()
+    {
+        // TODO: please don't do it like this.
+        // Instead just creae a player object that knows its position
+        // This is just a unnecessary computational task
+        for (int x = 0; x < mapSizeX; x++)
+        {
+            for (int y = 0; y < mapSizeY; y++)
+            {
+                if (tilesArray[x, y] != TileType.Player) continue;
+
+                return new Vector2Int(x, y);
             }
         }
-        return new Vector2Int(-1, -1); //Incase Player is not on current map? 
+
+        return new Vector2Int(-1, -1);
     }
 
-    public bool IsMyTurn(int type) {
-        return type == 1 && currentTurn % 2 == 1 || type == 2 && currentTurn % 2 == 0;
+    public bool IsMyTurn(TileType tileType)
+    {
+        // TODO: don't use int type ... = magic numbers
+        // I don't know even know what that's supposed to mean here
+        // Use another enum. I used TileType here just as a reminder
+        return (
+            tileType == TileType.Player && currentTurn % 2 == 1
+            || tileType == TileType.Enemy && currentTurn % 2 == 0
+        );
     }
 
-    public void NextTurn() {
+    private void EnemyActionCheck(GameObject enemy)
+    {
+        EnemyController controller = enemy.GetComponent<EnemyController>();
+        bool entityMayMove = !controller.GetHasMovedThisTurn() && controller.GetIsAlive();
+
+        if (!entityMayMove) continue;
+
+        bool entityIsInAttackRange = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY()) == 1;
+
+        if (entityIsInAttackRange)
+        {
+            controller.Attack();
+            interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.getAttackDamage());
+        }
+        else
+        {
+            controller.Movement();
+        }
+    }
+
+    public void NextTurn()
+    {
         currentTurn++;
         Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
-        if (IsMyTurn(2)) {
-            Vector2Int playerPos = LocatePlayer();
-            foreach (GameObject enemy in enemyList) {
-                EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
-                    if (GetDistanceToTile(playerPos.x, playerPos.y, controller.getXY().x, controller.getXY().y) == 1) {
-                        controller.Attack();
-                        interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.getAttackDamage());
-                    } else {
-                        controller.Movement();
-                    }
-                }
-            }
-            NextTurn();
+
+        // TODO: please don't use magic numbers
+        if (!IsMyTurn(2)) return;
+
+        Vector2Int playerPos = LocatePlayer();
+
+        foreach (GameObject enemy in enemyList)
+        {
+            EnemyActionCheck(enemy);
         }
+        NextTurn();
     }
 
-    private void ResetHasMovedThisTurn() {
-        foreach (GameObject entity in enemyList) {
+    private void ResetHasMovedThisTurn()
+    {
+        foreach (GameObject entity in enemyList)
+        {
             entity.GetComponent<EntityController>().SetHasMovedThisTurn(false);
         }
     }
 
-    private void GetObstaclesFromGrid() {
+    private void GetObstaclesFromGrid()
+    {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
         tilesArray = new int[mapSizeX, mapSizeY];
 
-        foreach (var pos in bounds.allPositionsWithin) {
-            if (wallTilemap.HasTile(pos)) {
-                int arrayX = pos.x - bounds.xMin;
-                int arrayY = pos.y - bounds.yMin;
-                arrayY = mapSizeY - 1 - arrayY;
-                SetTile(arrayX + 1, arrayY, 4);
-            }
+        foreach (var pos in bounds.allPositionsWithin)
+        {
+            if (!wallTilemap.HasTile(pos)) continue;
+
+            int arrayX = pos.x - bounds.xMin;
+            int arrayY = pos.y - bounds.yMin;
+            arrayY = mapSizeY - 1 - arrayY;
+            SetTile(arrayX + 1, arrayY, TileType.Obstacle);
         }
     }
 
-    private int GetDistanceToTile(int startX, int startY, int endX, int endY) {
-        return Math.Abs(startX - endX) + Math.Abs(startY - endY);
+    private int GetDistanceToTile(Vector2Int startPosition, Vector2Int endPosition)
+    {
+        return Math.Abs(startPosition.x - endPosition.x) + Math.Abs(startPosition.y - endPosition.y);
     }
 
-    private void PlayerAttack() {
+    private void PlayerAttack()
+    {
         int attackDistance = 1;
-        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2 && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
-            foreach (GameObject enemy in enemyList) {
-                EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.getXY().x, controller.getXY().y) == attackDistance
-                    && controller.getXY().x == GetTileHoveredByMouse().x && controller.getXY().y == GetTileHoveredByMouse().y) {
-                    controller.AdjustHealth(-playerDamage);
-                    interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerDamage);
-                }
-            }
+        Vector2Int tileHoveredByMouse = GetTileHoveredByMouse();
+
+        TileType tileType = GetTileValue(tileHoveredByMouse.x, tileHoveredByMouse.y);
+        bool mousePressed = Mouse.current.leftButton.wasPressedThisFrame;
+
+        // TODO: please fix the magic number here. I don't know what it means
+        bool isValidAttackAction = (
+            tileType == TileType.Enemy
+            && IsMyTurn(1)
+            && mousePressed
+            );
+
+        if (!isValidAttackAction) return;
+
+        foreach (GameObject enemy in enemyList)
+        {
+            EnemyController controller = enemy.GetComponent<EnemyController>();
+            Vector2Int enemyPosition = controller.GetXY();
+            Vector2Int playerPosition = LocatePlayer();
+            Vector2Int tileHoveredByMousePosition = GetTileHoveredByMouse();
+
+            int distanceToTile = GetDistanceToTile(playerPosition, enemyPosition);
+
+            bool isValidAttack = (
+                distanceToTile == attackDistance
+                && enemyPosition == tileHoveredByMousePosition
+                );
+
+            if (!isValidAttack) continue;
+
+            controller.AdjustHealth(-playerDamage);
+            interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerDamage);
         }
     }
 
-    public Vector2Int GetTileHoveredByMouse() {
+    public Vector2Int GetTileHoveredByMouse()
+    {
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, mainCam.nearClipPlane));
         Vector3Int cellPos = targetTilemap.WorldToCell(mouseWorldPos);
@@ -188,6 +260,7 @@ public class GameController : MonoBehaviour {
 
         arrayPos.x = Mathf.Clamp(arrayPos.x, 0, mapSizeX - 1);
         arrayPos.y = Mathf.Clamp(arrayPos.y, 0, mapSizeY - 1);
+
         return new Vector2Int(arrayPos.x, arrayPos.y);
     }
 }
