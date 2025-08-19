@@ -17,8 +17,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Walls
   - 
   - 
   - 
@@ -46,6 +46,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Entities
+    uniqueID: 3552350039
+    locked: 0
+  - name: Obstacles
+    uniqueID: 3937684929
+    locked: 0
+  - name: WallDeco
+    uniqueID: 1450677
     locked: 0
   m_RenderingLayers:
   - Default
