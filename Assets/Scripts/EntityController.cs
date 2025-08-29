@@ -1,24 +1,34 @@
 using System;
+
 using Scripts;
+
 using Unity.Collections;
 using Unity.VisualScripting;
+
 using UnityEngine;
 
 public abstract class EntityController : MonoBehaviour {
 
+    //Controller
     protected GameController gameController;
-    [SerializeField] protected string entityName;
-    [SerializeField] protected PlayerController playerController;
+    protected PlayerController playerController;
+    //Movement
     [SerializeField] protected int x, y;
-    protected TileValue type;
     [SerializeField] protected bool hasMovedThisTurn;
+
+    //stats
+    protected TileValue type;
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth;
-    protected bool isAlive;
-    protected EntityStatus status;
     [SerializeField] protected int attackDamage;
+    [SerializeField] protected string entityName;
+    protected EntityStatus status;
+    protected bool isAlive;
+
+    //abstracts
     public abstract void Movement();
     public abstract void Attack();
+
     private void Awake() {
         health = maxHealth;
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -31,6 +41,7 @@ public abstract class EntityController : MonoBehaviour {
         transform.position = gameController.TileToWorldCoordinate(x, y);
         //Debug.Log("Set Enemy to: " + x + y);
     }
+
     protected void Move(int dx, int dy, TileValue type) {
         if (dx == 0 && dy == 0) {
             gameController.NextTurn();

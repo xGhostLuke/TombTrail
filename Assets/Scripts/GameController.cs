@@ -1,29 +1,39 @@
 using System;
 using System.Collections.Generic;
+
+using Scripts;
+
 using Unity.VisualScripting;
+
 using UnityEditor.PackageManager;
 using UnityEditor.ProjectWindowCallback;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
-using Scripts;
 
 public class GameController : MonoBehaviour {
+
+    //controller
+    private PlayerController playerController;
+    private EntityController selectedEntity;
+
+    //map
     public TileValue[,] tilesArray;
     private int mapSizeX;
     private int mapSizeY;
     private int currentTurn;
-    [SerializeField] private GameObject[] enemyList;
     private Tilemap wallTilemap;
     private BoundsInt bounds;
     private Camera mainCam;
     private Tilemap targetTilemap;
+    [SerializeField] private GameObject[] enemyList;
     private GameObject tileHighlighter;
+
+    //windows
     private InteractionLogTextScript interactionlog;
     private EntityInfoTabScript entityInfoTabScript;
-    private PlayerController playerController;
-    private EntityController selectedEntity;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -44,10 +54,7 @@ public class GameController : MonoBehaviour {
         Debug.Log(mapSizeX + " " + mapSizeY);
         GetObstaclesFromGrid();
         PrintTilesArray();
-
     }
-
-    private void Start() { }
 
     private void Update() {
         PlayerAttack();
@@ -178,7 +185,7 @@ public class GameController : MonoBehaviour {
         return Math.Abs(startX - endX) + Math.Abs(startY - endY);
     }
 
-    private void PlayerAttack() {
+    private void PlayerAttack() { //This is here for now, should be in the PlayerController tho
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {

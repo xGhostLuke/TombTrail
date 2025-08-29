@@ -1,8 +1,12 @@
 using System;
 using System.Runtime.CompilerServices;
+
 using TMPro;
+
 using Unity.VisualScripting;
+
 using UnityEditor.Rendering.Canvas.ShaderGraph;
+
 using UnityEngine;
 
 public class EntityInfoTabScript : WindowController {
@@ -14,8 +18,6 @@ public class EntityInfoTabScript : WindowController {
     private void Awake() {
         HideWindow();
     }
-    private void Start() { }
-    private void Update() { }
 
     public void LoadStats(string name, string health, string damage, string maxhealth, string status) {
         EntityNameText.text = name;
@@ -30,5 +32,4 @@ public class EntityInfoTabScript : WindowController {
         cg.blocksRaycasts = true;
         LoadStats(name, health, damage, maxhealth, status);
     }
-
 }

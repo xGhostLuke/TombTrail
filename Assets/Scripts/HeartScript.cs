@@ -10,7 +10,6 @@ public class HeartScript : MonoBehaviour {
         image = gameObject.GetComponent<Image>();
     }
 
-    // Update is called once per frame
     void Update() {
         if (player.GetHealth() / 10 < numberOfHeart) {
             image.enabled = false;

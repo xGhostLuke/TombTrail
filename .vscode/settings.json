@@ -66,5 +66,11 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
     },
-    "dotnet.defaultSolution": "Tomb Trail.sln"
+    "dotnet.defaultSolution": "Tomb Trail.sln",
+    "[csharp]": {
+        "editor.formatOnSave": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always",
+    }
 }

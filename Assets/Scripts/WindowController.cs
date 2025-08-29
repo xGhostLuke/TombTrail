@@ -3,12 +3,6 @@ using UnityEngine;
 public class WindowController : MonoBehaviour {
     [SerializeField] protected CanvasGroup cg;
 
-    private void Awake() {
-
-    }
-
-    private void Update() { }
-
     public void ShowWindow() {
         cg.alpha = 1f;
         cg.interactable = true;

@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+
 using TMPro;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
 public class InteractionLogTextScript : WindowController {
@@ -31,6 +34,4 @@ public class InteractionLogTextScript : WindowController {
     private void RefreshTextInUI() {
         text.text = logText;
     }
-
-
 }

@@ -12,17 +12,12 @@ trim_trailing_whitespace = true
 
 indent_style = space
 indent_size = 4
-csharp_new_line_before_open_brace = none
-csharp_new_line_before_else = false
-csharp_new_line_before_catch = false
-csharp_new_line_before_finally = false
-csharp_style_require_braces = false
-csharp_style_require_braces = false:suggestion
+
 csharp_max_line_length = 73
 max_line_length = 73
 
 # --------------------
-# Einrückung und Klammern
+# Klammern & Einrückung
 # --------------------
 
 csharp_indent_case_contents = true
@@ -33,6 +28,9 @@ csharp_indent_braces = false
 
 # Klammern NICHT in neue Zeile
 csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
 
 # --------------------
 # Leerzeichen
@@ -80,3 +78,35 @@ dotnet_naming_symbols.private_fields.required_modifiers = readonly
 
 dotnet_naming_style.camel_case.capitalization = camel_case
 dotnet_naming_style.camel_case.required_prefix = _
+
+# --------------------
+# Leerzeilen-Regeln
+# --------------------
+
+# maximal 1 Leerzeile überall
+csharp_preserve_single_line_statements = true
+csharp_preserve_single_line_blocks = true
+dotnet_style_allow_multiple_blank_lines_experimental = false
+
+# Methoden sollen durch eine Leerzeile getrennt sein
+csharp_new_line_between_members = true
+
+# --------------------
+# Using-Regeln
+# --------------------
+
+# Sortiere System-Usings zuerst
+dotnet_sort_system_directives_first = true
+
+# Separate Gruppen zwischen eigenen Usings
+dotnet_separate_import_directive_groups = true
+
+# Entferne unnötige Usings automatisch
+dotnet_remove_unnecessary_imports = true
+
+# --------------------
+# Optionale Zusatzregeln
+# --------------------
+
+# Warnung bei Zeilenlänge > 73
+csharp_style_line_endings = crlf:suggestion
