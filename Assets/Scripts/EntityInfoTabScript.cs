@@ -1,39 +1,34 @@
 using System;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.Rendering.Canvas.ShaderGraph;
 using UnityEngine;
 
-public class EntityInfoTabScript : MonoBehaviour {
-    [SerializeField] private TextMeshProUGUI EnemyDamageText;
-    [SerializeField] private TextMeshProUGUI EnemyHealthText;
-    [SerializeField] private TextMeshProUGUI EnemyNameText;
-    private GameObject EnemyInfoWindow;
-
+public class EntityInfoTabScript : WindowController {
+    [SerializeField] private TextMeshProUGUI EntityDamageText;
+    [SerializeField] private TextMeshProUGUI EntityHealthText;
+    [SerializeField] private TextMeshProUGUI EntityNameText;
+    [SerializeField] private TextMeshProUGUI EntityStatusText;
 
     private void Awake() {
-        EnemyInfoWindow = GameObject.FindGameObjectWithTag("EnemyInfoTab");
+        HideWindow();
     }
-    private void Start() {
-        EnemyInfoWindow.SetActive(false);
+    private void Start() { }
+    private void Update() { }
+
+    public void LoadStats(string name, string health, string damage, string maxhealth, string status) {
+        EntityNameText.text = name;
+        EntityDamageText.text = damage;
+        EntityHealthText.text = health + " / " + maxhealth;
+        EntityStatusText.text = status;
     }
 
-    // Update is called once per frame
-    private void Update() {
-
+    public void ShowWindow(string name, string health, string damage, string maxhealth, string status) {
+        cg.alpha = 1f;
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
+        LoadStats(name, health, damage, maxhealth, status);
     }
 
-    private void LoadStats(string name, string health, string damage, string maxhealth) {
-        EnemyNameText.text = name;
-        EnemyDamageText.text = damage;
-        EnemyHealthText.text = maxhealth + " / " + health;
-    }
-
-    public void ShowWindow(string name, string health, string damage, string maxhealth) {
-        EnemyInfoWindow.SetActive(true);
-        LoadStats(name, health, damage, maxhealth);
-    }
-
-    public void HideWindow() {
-        EnemyInfoWindow.SetActive(false);
-    }
 }

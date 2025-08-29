@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework.Constraints;
-using Tiles;
+using Scripts;
 using UnityEngine;
 
 public class EnemyController : EntityController {
@@ -15,12 +15,14 @@ public class EnemyController : EntityController {
         gameController.SetTile(x, y, type);
         UpdatePosition(x, y);
         isAlive = true;
+        status = EntityStatus.Hostile;
     }
 
     private void Update() {
         if (health <= 0) {
             gameController.SetTile(x, y, 0);
             isAlive = false;
+            status = EntityStatus.Dead;
             gameObject.SetActive(false);
         }
     }
@@ -35,6 +37,8 @@ public class EnemyController : EntityController {
         }
     }
     override public void Attack() {
-        playerController.AdjustHealth(-attackDamage);
+        if (health > 0) {
+            playerController.AdjustHealth(-attackDamage);
+        }
     }
 }

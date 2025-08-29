@@ -1,4 +1,4 @@
-namespace Tiles {
+namespace Scripts {
     public enum TileValue {
         Empty = 0,
         Player = 1,

@@ -1,5 +1,5 @@
 using System;
-using Tiles;
+using Scripts;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +15,7 @@ public abstract class EntityController : MonoBehaviour {
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth;
     protected bool isAlive;
+    protected EntityStatus status;
     [SerializeField] protected int attackDamage;
     public abstract void Movement();
     public abstract void Attack();
@@ -28,7 +29,7 @@ public abstract class EntityController : MonoBehaviour {
 
     protected void UpdatePosition(int x, int y) {
         transform.position = gameController.TileToWorldCoordinate(x, y);
-        Debug.Log("Set Enemy to: " + x + y);
+        //Debug.Log("Set Enemy to: " + x + y);
     }
     protected void Move(int dx, int dy, TileValue type) {
         if (dx == 0 && dy == 0) {
@@ -88,6 +89,10 @@ public abstract class EntityController : MonoBehaviour {
 
     public string GetEntityName() {
         return entityName;
+    }
+
+    public EntityStatus getStatus() {
+        return status;
     }
 
 }

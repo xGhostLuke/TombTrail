@@ -9,9 +9,9 @@ TagManager:
   - FloorTilemap
   - Enemy
   - TileHighlighter
-  - InteractionLogText
   - EnemyInfoTab
   - EnemyInfoWindow
+  - Interactionlog
   layers:
   - Default
   - TransparentFX

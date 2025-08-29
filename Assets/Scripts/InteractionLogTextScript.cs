@@ -1,16 +1,18 @@
+using System;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class InteractionLogTextScript : MonoBehaviour {
+public class InteractionLogTextScript : WindowController {
     private string logText;
     [SerializeField] private TextMeshProUGUI text;
-
+    [SerializeField] private GameObject interactionlogWindow;
+    [SerializeField] private GameObject interactionlogButton;
     private void Awake() {
-        text = gameObject.GetComponent<TextMeshProUGUI>();
         logText = "";
         RefreshTextInUI();
+        HideWindow();
     }
 
     public void AddTextToLog(string addText) {
@@ -20,7 +22,7 @@ public class InteractionLogTextScript : MonoBehaviour {
     }
 
     private void CheckTextLength() {
-        if (logText.Length > 1100) {
+        if (logText.Length > 764) {
             int firstLineEnds = logText.IndexOf("\n");
             logText = logText.Substring(firstLineEnds + 1);
         }
@@ -29,4 +31,6 @@ public class InteractionLogTextScript : MonoBehaviour {
     private void RefreshTextInUI() {
         text.text = logText;
     }
+
+
 }

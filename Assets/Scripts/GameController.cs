@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
-using Tiles;
+using Scripts;
 
 public class GameController : MonoBehaviour {
     public TileValue[,] tilesArray;
@@ -20,9 +20,10 @@ public class GameController : MonoBehaviour {
     private Camera mainCam;
     private Tilemap targetTilemap;
     private GameObject tileHighlighter;
-    private InteractionLogTextScript interactionLogText;
+    private InteractionLogTextScript interactionlog;
     private EntityInfoTabScript entityInfoTabScript;
     private PlayerController playerController;
+    private EntityController selectedEntity;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -30,7 +31,7 @@ public class GameController : MonoBehaviour {
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
-        interactionLogText = GameObject.FindGameObjectWithTag("InteractionLogText").GetComponent<InteractionLogTextScript>();
+        interactionlog = GameObject.FindGameObjectWithTag("Interactionlog").GetComponent<InteractionLogTextScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
 
@@ -52,6 +53,9 @@ public class GameController : MonoBehaviour {
         PlayerAttack();
         if (Mouse.current.rightButton.wasPressedThisFrame) {
             GetEntityInfo();
+        }
+        if (Keyboard.current.lKey.wasPressedThisFrame) {
+            ShowInteractionlog();
         }
     }
 
@@ -128,6 +132,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void NextTurn() {
+        RefreshEnemyInfo();
         currentTurn++;
         Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
@@ -138,7 +143,7 @@ public class GameController : MonoBehaviour {
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
                     if (GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y) == 1) {
                         controller.Attack();
-                        interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.GetAttackDamage());
+                        interactionlog.AddTextToLog("Enemy attacked Player for: " + controller.GetAttackDamage());
                     } else {
                         controller.Movement();
                     }
@@ -181,9 +186,10 @@ public class GameController : MonoBehaviour {
                 if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.GetXY().x, controller.GetXY().y) == attackDistance
                     && controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
                     controller.AdjustHealth(-playerController.GetAttackDamage());
-                    interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerController.GetAttackDamage());
+                    interactionlog.AddTextToLog("Player attacked Enemy for: " + playerController.GetAttackDamage());
                 }
             }
+            NextTurn();
         }
     }
 
@@ -196,8 +202,10 @@ public class GameController : MonoBehaviour {
                         controller.GetEntityName(),
                         controller.GetHealth().ToString(),
                          controller.GetAttackDamage().ToString(),
-                         controller.GetMaxHealth().ToString()
+                         controller.GetMaxHealth().ToString(),
+                         controller.getStatus().ToString()
                     );
+                    selectedEntity = controller;
                 }
             }
         } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Player) {
@@ -205,7 +213,21 @@ public class GameController : MonoBehaviour {
                         playerController.GetEntityName(),
                         playerController.GetHealth().ToString(),
                          playerController.GetAttackDamage().ToString(),
-                         playerController.GetMaxHealth().ToString()
+                         playerController.GetMaxHealth().ToString(),
+                         playerController.getStatus().ToString()
+            );
+            selectedEntity = playerController;
+        }
+    }
+
+    private void RefreshEnemyInfo() {
+        if (selectedEntity != null) {
+            entityInfoTabScript.LoadStats(
+                selectedEntity.GetEntityName(),
+                selectedEntity.GetHealth().ToString(),
+                selectedEntity.GetAttackDamage().ToString(),
+                selectedEntity.GetMaxHealth().ToString(),
+                selectedEntity.getStatus().ToString()
             );
         }
     }
@@ -223,5 +245,9 @@ public class GameController : MonoBehaviour {
         arrayPos.x = Mathf.Clamp(arrayPos.x, 0, mapSizeX - 1);
         arrayPos.y = Mathf.Clamp(arrayPos.y, 0, mapSizeY - 1);
         return new Vector2Int(arrayPos.x, arrayPos.y);
+    }
+
+    private void ShowInteractionlog() {
+        interactionlog.ShowWindow();
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using Tiles;
+using Scripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Scripting.APIUpdating;
@@ -12,6 +12,7 @@ public class PlayerController : EntityController {
         gameController.SetTile(x, y, TileValue.Player);
         UpdatePosition(x, y);
         type = TileValue.Player;
+        status = EntityStatus.Neutral;
     }
 
     private void Update() {
@@ -28,7 +29,7 @@ public class PlayerController : EntityController {
         if (Keyboard.current.spaceKey.wasPressedThisFrame) Move(0, 0, type);
     }
 
-    override public void Attack() => throw new NotImplementedException();
+    override public void Attack() => throw new NotImplementedException(); //Managed over Gamecontroller, works for now, maybe rework in the future
 
 
 }
