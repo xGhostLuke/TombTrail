@@ -1461,7 +1461,7 @@ MonoBehaviour:
   EntityDamageText: {fileID: 353605417}
   EntityHealthText: {fileID: 1451095252}
   EntityNameText: {fileID: 128978895}
-  EntityStatus: {fileID: 1539106418}
+  EntityStatusText: {fileID: 1539106418}
 --- !u!225 &559634471
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4895,7 +4895,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BackGroundColor: {r: 0.122641504, g: 0.122063, b: 0.122063, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -5393,7 +5393,7 @@ GameObject:
   - component: {fileID: 1539106419}
   - component: {fileID: 1539106418}
   m_Layer: 5
-  m_Name: EntityStatus
+  m_Name: EntityStatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5991,14 +5991,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c62ecf51272078499f39885774ff4f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Player
-  playerController: {fileID: 0}
   x: 2
   y: 2
   hasMovedThisTurn: 0
   health: 50
   maxHealth: 50
   attackDamage: 10
+  entityName: Player
 --- !u!1 &1979226146
 GameObject:
   m_ObjectHideFlags: 0
