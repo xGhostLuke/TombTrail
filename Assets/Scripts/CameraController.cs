@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
     GameObject player;
+    Vector3 velocity = Vector3.zero;
+    public float smoothTime = 0.3f;
 
     void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    void Update() {
+    void LateUpdate() {
         if (NeedToMoveCamera()) {
-            transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, player.transform.position.y, -10), Time.deltaTime * 10f);
+            Vector3 targetPos = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
         }
     }
 
