@@ -1,4 +1,5 @@
 using System;
+using Tiles;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,7 +21,7 @@ public class TileHighlighter : MonoBehaviour {
     private void SnapToGrid() {
         try {
             Vector2Int hoveredTile = gameController.GetTileHoveredByMouse();
-            if (gameController.GetTileValue(hoveredTile.x, hoveredTile.y) == 2) {
+            if (gameController.GetTileValue(hoveredTile.x, hoveredTile.y) == TileValue.Enemy) {
                 spriteRenderer.color = new Color(1f, 0f, 0f, 0.27f);
             } else {
                 spriteRenderer.color = new Color(0.55f, 0.55f, 0.55f, 0.27f);

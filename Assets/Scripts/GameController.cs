@@ -7,9 +7,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
+using Tiles;
 
 public class GameController : MonoBehaviour {
-    public int[,] tilesArray;
+    public TileValue[,] tilesArray;
     private int mapSizeX;
     private int mapSizeY;
     private int currentTurn;
@@ -37,7 +38,7 @@ public class GameController : MonoBehaviour {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
         currentTurn = 1;
-        tilesArray = new int[mapSizeX + 1, mapSizeY];
+        tilesArray = new TileValue[mapSizeX + 1, mapSizeY];
         ClearTilesArray();
         Debug.Log(mapSizeX + " " + mapSizeY);
         GetObstaclesFromGrid();
@@ -66,18 +67,31 @@ public class GameController : MonoBehaviour {
         string output = "";
         for (int i = 0; i < mapSizeY; i++) {
             for (int j = 0; j < mapSizeX; j++) {
-                output += tilesArray[j, i] + " ";
+                TileValue value = tilesArray[j, i];
+                switch (value) {
+                    case TileValue.Empty:
+                        output += " 0";
+                        break;
+                    case TileValue.Player:
+                        output += " P";
+                        break;
+                    case TileValue.Enemy:
+                        output += " E";
+                        break;
+                    case TileValue.Item:
+                        output += " I";
+                        break;
+                    case TileValue.Obstacle:
+                        output += " X";
+                        break;
+                }
             }
             output += "\n";
         }
-        Debug.Log("1 = Player, 2 = Enemy, 3 = Item, 4 = Obstacle\nCurrent Tiles Array:\n" + output);
+        Debug.Log(output);
     }
 
-    public void SetTile(int x, int y, int value) {
-        // 1 = Player 
-        // 2 = Enemy 
-        // 3 = Item
-        // 4 = Obstacle
+    public void SetTile(int x, int y, TileValue value) {
         if (IsValidTile(x, y)) {
             tilesArray[x, y] = value;
         }
@@ -91,7 +105,7 @@ public class GameController : MonoBehaviour {
         return tilesArray[x, y] == 0;
     }
 
-    public int GetTileValue(int x, int y) {
+    public TileValue GetTileValue(int x, int y) {
         return tilesArray[x, y];
     }
 
@@ -143,14 +157,14 @@ public class GameController : MonoBehaviour {
     private void GetObstaclesFromGrid() {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
-        tilesArray = new int[mapSizeX, mapSizeY];
+        tilesArray = new TileValue[mapSizeX, mapSizeY];
 
         foreach (var pos in bounds.allPositionsWithin) {
             if (wallTilemap.HasTile(pos)) {
                 int arrayX = pos.x - bounds.xMin;
                 int arrayY = pos.y - bounds.yMin;
                 arrayY = mapSizeY - 1 - arrayY;
-                SetTile(arrayX + 1, arrayY, 4);
+                SetTile(arrayX + 1, arrayY, TileValue.Obstacle);
             }
         }
     }
@@ -161,7 +175,7 @@ public class GameController : MonoBehaviour {
 
     private void PlayerAttack() {
         int attackDistance = 1;
-        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2 && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
+        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.GetXY().x, controller.GetXY().y) == attackDistance
@@ -174,7 +188,7 @@ public class GameController : MonoBehaviour {
     }
 
     private void GetEntityInfo() {
-        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2) {
+        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy) {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
@@ -186,7 +200,7 @@ public class GameController : MonoBehaviour {
                     );
                 }
             }
-        } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 1) {
+        } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Player) {
             entityInfoTabScript.ShowWindow(
                         playerController.GetEntityName(),
                         playerController.GetHealth().ToString(),

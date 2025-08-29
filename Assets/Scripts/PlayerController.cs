@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Tiles;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Scripting.APIUpdating;
@@ -8,9 +9,9 @@ public class PlayerController : EntityController {
 
     private void Start() {
         //REMINDER: x and y needs to be adjusted if the Grid got changed by alot (idk how to fix this)
-        gameController.SetTile(x, y, 1);
+        gameController.SetTile(x, y, TileValue.Player);
         UpdatePosition(x, y);
-        type = 1;
+        type = TileValue.Player;
     }
 
     private void Update() {

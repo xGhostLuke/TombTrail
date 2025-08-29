@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework.Constraints;
+using Tiles;
 using UnityEngine;
 
 public class EnemyController : EntityController {
@@ -10,7 +11,7 @@ public class EnemyController : EntityController {
     }
 
     private void Start() {
-        type = 2;
+        type = TileValue.Enemy;
         gameController.SetTile(x, y, type);
         UpdatePosition(x, y);
         isAlive = true;

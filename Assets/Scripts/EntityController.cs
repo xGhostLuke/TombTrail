@@ -1,4 +1,5 @@
 using System;
+using Tiles;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,7 +10,7 @@ public abstract class EntityController : MonoBehaviour {
     [SerializeField] protected string entityName;
     [SerializeField] protected PlayerController playerController;
     [SerializeField] protected int x, y;
-    protected int type;
+    protected TileValue type;
     [SerializeField] protected bool hasMovedThisTurn;
     [SerializeField] protected int health;
     [SerializeField] protected int maxHealth;
@@ -29,7 +30,7 @@ public abstract class EntityController : MonoBehaviour {
         transform.position = gameController.TileToWorldCoordinate(x, y);
         Debug.Log("Set Enemy to: " + x + y);
     }
-    protected void Move(int dx, int dy, int type) {
+    protected void Move(int dx, int dy, TileValue type) {
         if (dx == 0 && dy == 0) {
             gameController.NextTurn();
         }
@@ -38,7 +39,7 @@ public abstract class EntityController : MonoBehaviour {
         int newY = y + dy;
         //Debug.Log("Pos of Type: " + type + " is \n " + x + " " + y);
         if (gameController.IsValidTile(newX, newY) && gameController.IsTileEmpty(newX, newY)) {
-            gameController.SetTile(x, y, 0);
+            gameController.SetTile(x, y, TileValue.Empty);
             //Debug.Log("Set Tile " + x + y + "to 0");
             x = newX;
             y = newY;
@@ -47,7 +48,7 @@ public abstract class EntityController : MonoBehaviour {
             hasMovedThisTurn = true;
             //gameController.PrintTilesArray();
 
-            if (type == 1) {
+            if (type == TileValue.Player) {
                 gameController.NextTurn();
             }
         }
