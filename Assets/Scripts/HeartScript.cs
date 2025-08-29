@@ -12,7 +12,7 @@ public class HeartScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (player.getHealth() / 10 < numberOfHeart) {
+        if (player.GetHealth() / 10 < numberOfHeart) {
             image.enabled = false;
         } else {
             image.enabled = true;

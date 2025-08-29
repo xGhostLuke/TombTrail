@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5382256212138041743}
   - component: {fileID: 6878817737937797848}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Bat
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,9 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9926331bda4e69b4c8b68b69cb03d251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityName: Bat
   playerController: {fileID: 0}
   x: 15
   y: 15
   hasMovedThisTurn: 0
-  health: 10
+  maxHealth: 10
   attackDamage: 10

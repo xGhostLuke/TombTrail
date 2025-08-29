@@ -6,16 +6,19 @@ using UnityEngine;
 public abstract class EntityController : MonoBehaviour {
 
     protected GameController gameController;
+    [SerializeField] protected string entityName;
     [SerializeField] protected PlayerController playerController;
     [SerializeField] protected int x, y;
     protected int type;
     [SerializeField] protected bool hasMovedThisTurn;
     [SerializeField] protected int health;
+    [SerializeField] protected int maxHealth;
     protected bool isAlive;
     [SerializeField] protected int attackDamage;
     public abstract void Movement();
     public abstract void Attack();
     private void Awake() {
+        health = maxHealth;
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         hasMovedThisTurn = false;
@@ -58,7 +61,7 @@ public abstract class EntityController : MonoBehaviour {
         return hasMovedThisTurn;
     }
 
-    public Vector2Int getXY() {
+    public Vector2Int GetXY() {
         return new Vector2Int(x, y);
     }
 
@@ -66,7 +69,7 @@ public abstract class EntityController : MonoBehaviour {
         health += adjust;
     }
 
-    public int getHealth() {
+    public int GetHealth() {
         return health;
     }
 
@@ -74,8 +77,16 @@ public abstract class EntityController : MonoBehaviour {
         return isAlive;
     }
 
-    public int getAttackDamage() {
+    public int GetAttackDamage() {
         return attackDamage;
+    }
+
+    public int GetMaxHealth() {
+        return maxHealth;
+    }
+
+    public string GetEntityName() {
+        return entityName;
     }
 
 }

@@ -18,10 +18,10 @@ public class GameController : MonoBehaviour {
     private BoundsInt bounds;
     private Camera mainCam;
     private Tilemap targetTilemap;
-    [SerializeField] private int playerDamage;
     private GameObject tileHighlighter;
     private InteractionLogTextScript interactionLogText;
-    //private PlayerController playerController;
+    private EntityInfoTabScript entityInfoTabScript;
+    private PlayerController playerController;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -30,7 +30,8 @@ public class GameController : MonoBehaviour {
         targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
         interactionLogText = GameObject.FindGameObjectWithTag("InteractionLogText").GetComponent<InteractionLogTextScript>();
-        //playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
 
         bounds = wallTilemap.cellBounds;
         mapSizeX = bounds.size.x;
@@ -48,6 +49,9 @@ public class GameController : MonoBehaviour {
 
     private void Update() {
         PlayerAttack();
+        if (Mouse.current.rightButton.wasPressedThisFrame) {
+            GetEntityInfo();
+        }
     }
 
     private void ClearTilesArray() {
@@ -102,14 +106,7 @@ public class GameController : MonoBehaviour {
     }
 
     public Vector2Int LocatePlayer() {
-        for (int x = 0; x < mapSizeX; x++) {
-            for (int y = 0; y < mapSizeY; y++) {
-                if (tilesArray[x, y] == 1) {
-                    return new Vector2Int(x, y);
-                }
-            }
-        }
-        return new Vector2Int(-1, -1); //Incase Player is not on current map? 
+        return playerController.GetXY();
     }
 
     public bool IsMyTurn(int type) {
@@ -125,9 +122,9 @@ public class GameController : MonoBehaviour {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
-                    if (GetDistanceToTile(playerPos.x, playerPos.y, controller.getXY().x, controller.getXY().y) == 1) {
+                    if (GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y) == 1) {
                         controller.Attack();
-                        interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.getAttackDamage());
+                        interactionLogText.AddTextToLog("Enemy attacked Player for: " + controller.GetAttackDamage());
                     } else {
                         controller.Movement();
                     }
@@ -167,12 +164,35 @@ public class GameController : MonoBehaviour {
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2 && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.getXY().x, controller.getXY().y) == attackDistance
-                    && controller.getXY().x == GetTileHoveredByMouse().x && controller.getXY().y == GetTileHoveredByMouse().y) {
-                    controller.AdjustHealth(-playerDamage);
-                    interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerDamage);
+                if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.GetXY().x, controller.GetXY().y) == attackDistance
+                    && controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
+                    controller.AdjustHealth(-playerController.GetAttackDamage());
+                    interactionLogText.AddTextToLog("Player attacked Enemy for: " + playerController.GetAttackDamage());
                 }
             }
+        }
+    }
+
+    private void GetEntityInfo() {
+        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 2) {
+            foreach (GameObject enemy in enemyList) {
+                EnemyController controller = enemy.GetComponent<EnemyController>();
+                if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
+                    entityInfoTabScript.ShowWindow(
+                        controller.GetEntityName(),
+                        controller.GetHealth().ToString(),
+                         controller.GetAttackDamage().ToString(),
+                         controller.GetMaxHealth().ToString()
+                    );
+                }
+            }
+        } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == 1) {
+            entityInfoTabScript.ShowWindow(
+                        playerController.GetEntityName(),
+                        playerController.GetHealth().ToString(),
+                         playerController.GetAttackDamage().ToString(),
+                         playerController.GetMaxHealth().ToString()
+            );
         }
     }
 
