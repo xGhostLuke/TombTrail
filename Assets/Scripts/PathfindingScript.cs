@@ -44,6 +44,7 @@ public class PathfindingScript : MonoBehaviour {
             int nx = node.x + dirs[i, 0];
             int ny = node.y + dirs[i, 1];
 
+            // TODO: please invert the statement to reduce depth
             if (nx >= 0 && nx < nodes.GetLength(0) && ny >= 0 && ny < nodes.GetLength(1)) {
                 neighbors.Add(nodes[nx, ny]);
             }
@@ -56,6 +57,7 @@ public class PathfindingScript : MonoBehaviour {
         List<Nodes> openSet = new List<Nodes> { startNode };
         HashSet<Nodes> closedSet = new HashSet<Nodes>();
 
+        // TODO: please invert it all. I can't take it anymore
         while (openSet.Count > 0) {
             Nodes current = openSet[0];
             for (int i = 1; i < openSet.Count; i++) {

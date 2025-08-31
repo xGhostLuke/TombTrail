@@ -9,7 +9,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class EntityController : MonoBehaviour {
-
     //Controller
     protected GameController gameController;
     protected PlayerController playerController;
@@ -33,9 +32,15 @@ public abstract class EntityController : MonoBehaviour {
     public abstract void Attack();
 
     private void Awake() {
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gameController = GameObject
+            .FindGameObjectWithTag("GameController")
+            .GetComponent<GameController>();
+        pathfindingScript = GameObject
+            .FindGameObjectWithTag("Pathfinding")
+            .GetComponent<PathfindingScript>();
+        playerController = GameObject
+            .FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>();
     }
 
     private void Start() {
@@ -58,27 +63,32 @@ public abstract class EntityController : MonoBehaviour {
         int newX = x + dx;
         int newY = y + dy;
         //Debug.Log("Pos of Type: " + type + " is \n " + x + " " + y);
-        if (gameController.IsValidTile(newX, newY) && gameController.IsTileEmpty(newX, newY)) {
-            gameController.SetTile(x, y, TileValue.Empty);
-            //Debug.Log("Set Tile " + x + y + "to 0");
-            x = newX;
-            y = newY;
-            gameController.SetTile(x, y, type);
-            UpdatePosition(x, y);
-            hasMovedThisTurn = true;
-            //gameController.PrintTilesArray();
+        bool isValidTileAndEmpty = (
+            gameController.IsValidTile(newX, newY)
+            && gameController.IsTileEmpty(newX, newY)
+        );
 
-            if (type == TileValue.Player) {
-                gameController.NextTurn();
-            }
-        }
+        if (!isValidTileAndEmpty) return;
+
+        gameController.SetTile(x, y, TileValue.Empty);
+        //Debug.Log("Set Tile " + x + y + "to 0");
+        x = newX;
+        y = newY;
+        gameController.SetTile(x, y, type);
+        UpdatePosition(x, y);
+        hasMovedThisTurn = true;
+        //gameController.PrintTilesArray();
+
+        if (type != TileValue.Player) return;
+
+        gameController.NextTurn();
     }
 
     protected List<Vector2Int> ViewableTiles() {
 
-        for (int i = 0; i < viewingDistance; i++) {
+        // for (int i = 0; i < viewingDistance; i++) {
 
-        }
+        // }
 
         return null;
     }
@@ -127,5 +137,4 @@ public abstract class EntityController : MonoBehaviour {
     public int GetViewingDistance() {
         return viewingDistance;
     }
-
 }

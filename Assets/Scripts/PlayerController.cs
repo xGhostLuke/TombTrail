@@ -19,6 +19,7 @@ public class PlayerController : EntityController {
     }
 
     private void Update() {
+        // TODO: please, please invert it. I'm crying rn
         if (gameController.IsMyTurn(1)) {
             Movement();
         }
@@ -33,6 +34,4 @@ public class PlayerController : EntityController {
     }
 
     override public void Attack() => throw new NotImplementedException(); //Managed over Gamecontroller, works for now, maybe rework in the future
-
-
 }
