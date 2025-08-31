@@ -25,10 +25,10 @@ public class InteractionLogTextScript : WindowController {
     }
 
     private void CheckTextLength() {
-        if (logText.Length > 764) {
-            int firstLineEnds = logText.IndexOf("\n");
-            logText = logText.Substring(firstLineEnds + 1);
-        }
+        if (logText.Length <= 764) return;
+
+        int firstLineEnds = logText.IndexOf("\n");
+        logText = logText.Substring(firstLineEnds + 1);
     }
 
     private void RefreshTextInUI() {

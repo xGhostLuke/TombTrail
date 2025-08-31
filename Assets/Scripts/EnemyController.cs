@@ -8,12 +8,13 @@ using Scripts;
 using UnityEngine;
 
 public class EnemyController : EntityController {
-
-
-
     private void Awake() {
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gameController = GameObject
+            .FindGameObjectWithTag("GameController")
+            .GetComponent<GameController>();
+        playerController = GameObject
+            .FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>();
     }
 
     private void Start() {
@@ -25,12 +26,12 @@ public class EnemyController : EntityController {
     }
 
     private void Update() {
-        if (health <= 0) {
-            gameController.SetTile(x, y, 0);
-            isAlive = false;
-            status = EntityStatus.Dead;
-            gameObject.SetActive(false);
-        }
+        if (health > 0) return;
+
+        gameController.SetTile(x, y, 0);
+        isAlive = false;
+        status = EntityStatus.Dead;
+        gameObject.SetActive(false);
     }
 
     override public void Movement() {
@@ -39,27 +40,30 @@ public class EnemyController : EntityController {
         Nodes startNode = pathfindingScript.nodes[x, y];
         Nodes targetNode = pathfindingScript.nodes[playerPos.x, playerPos.y];
 
-
         List<Nodes> path = pathfindingScript.FindPath(startNode, targetNode);
 
-        if (path != null && path.Count > 0 && path.Count < viewingDistance) {
+        bool isValidTile = (
+            path != null
+            && path.Count > 0
+            && path.Count < viewingDistance
+        );
 
-            Nodes nextStep = path[0];
-
-
-            int dx = nextStep.x - x;
-            int dy = nextStep.y - y;
-
-
-            Move(dx, dy, type);
-        } else {
-
+        if (!isValidTile) {
             hasMovedThisTurn = true;
+            return;
         }
+
+        Nodes nextStep = path[0];
+
+        int dx = nextStep.x - x;
+        int dy = nextStep.y - y;
+
+        Move(dx, dy, type);
     }
+
     override public void Attack() {
-        if (health > 0) {
-            playerController.AdjustHealth(-attackDamage);
-        }
+        if (health <= 0) return;
+
+        playerController.AdjustHealth(-attackDamage);
     }
 }
