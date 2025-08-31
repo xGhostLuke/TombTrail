@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     private EntityController selectedEntity;
 
     //map
-    public TileValue[,] tilesArray;
+    public Tiles[,] tilesArray;
     private int mapSizeX;
     private int mapSizeY;
     private int currentTurn;
@@ -52,9 +52,6 @@ public class GameController : MonoBehaviour {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
         currentTurn = 1;
-        tilesArray = new TileValue[mapSizeX + 1, mapSizeY];
-        ClearTilesArray();
-        //Debug.Log(mapSizeX + " " + mapSizeY);
         GetObstaclesFromGrid();
         PrintTilesArray();
 
@@ -70,10 +67,11 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    private void ClearTilesArray() {
+    private void InitializeTilesArray() {
+        tilesArray = new Tiles[mapSizeX, mapSizeY];
         for (int i = 0; i < mapSizeX; i++) {
             for (int j = 0; j < mapSizeY; j++) {
-                tilesArray[i, j] = 0;
+                tilesArray[i, j] = new Tiles(TileValue.Empty, false);
             }
         }
     }
@@ -82,7 +80,7 @@ public class GameController : MonoBehaviour {
         string output = "";
         for (int i = 0; i < mapSizeY; i++) {
             for (int j = 0; j < mapSizeX; j++) {
-                TileValue value = tilesArray[j, i];
+                TileValue value = tilesArray[j, i].GetTileValue();
                 switch (value) {
                     case TileValue.Empty:
                         output += " 0";
@@ -108,7 +106,7 @@ public class GameController : MonoBehaviour {
 
     public void SetTile(int x, int y, TileValue value) {
         if (IsValidTile(x, y)) {
-            tilesArray[x, y] = value;
+            tilesArray[x, y].SetTileValue(value);
         }
     }
 
@@ -117,11 +115,11 @@ public class GameController : MonoBehaviour {
     }
 
     public bool IsTileEmpty(int x, int y) {
-        return tilesArray[x, y] == 0;
+        return tilesArray[x, y].GetTileValue() == TileValue.Empty;
     }
 
     public TileValue GetTileValue(int x, int y) {
-        return tilesArray[x, y];
+        return tilesArray[x, y].GetTileValue();
     }
 
     public Vector3 TileToWorldCoordinate(int x, int y) {
@@ -159,7 +157,6 @@ public class GameController : MonoBehaviour {
                     int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
                     if (distance == 1) {
                         controller.Attack();
-                        interactionlog.AddTextToLog("Enemy attacked Player for: " + controller.GetAttackDamage());
                     } else {
                         if (distance <= controller.GetViewingDistance()) {
                             controller.Movement();
@@ -180,8 +177,8 @@ public class GameController : MonoBehaviour {
     private void GetObstaclesFromGrid() {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
-        tilesArray = new TileValue[mapSizeX, mapSizeY];
-
+        tilesArray = new Tiles[mapSizeX, mapSizeY];
+        InitializeTilesArray();
         foreach (var pos in bounds.allPositionsWithin) {
             if (wallTilemap.HasTile(pos)) {
                 int arrayX = pos.x - bounds.xMin;
@@ -197,6 +194,7 @@ public class GameController : MonoBehaviour {
     }
 
     private void PlayerAttack() { //This is here for now, should be in the PlayerController tho
+        RefreshEnemyInfo();
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
@@ -205,6 +203,7 @@ public class GameController : MonoBehaviour {
                     && controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
                     controller.AdjustHealth(-playerController.GetAttackDamage());
                     interactionlog.AddTextToLog("Player attacked Enemy for: " + playerController.GetAttackDamage());
+                    RefreshEnemyInfo();
                 }
             }
             NextTurn();

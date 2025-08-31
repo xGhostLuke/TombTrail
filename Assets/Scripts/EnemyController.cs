@@ -60,6 +60,7 @@ public class EnemyController : EntityController {
     override public void Attack() {
         if (health > 0) {
             playerController.AdjustHealth(-attackDamage);
+            gameController.SendMessageToLog("Enemy attacked Player for: " + GetAttackDamage());
         }
     }
 }

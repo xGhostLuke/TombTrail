@@ -24,7 +24,7 @@ public abstract class EntityController : MonoBehaviour {
     [SerializeField] protected int maxHealth;
     [SerializeField] protected int attackDamage;
     [SerializeField] protected string entityName;
-    protected EntityStatus status;
+    [SerializeField] protected EntityStatus status;
     protected bool isAlive;
     [SerializeField] protected int viewingDistance;
 
@@ -74,6 +74,8 @@ public abstract class EntityController : MonoBehaviour {
         }
     }
 
+
+    //WIP
     protected List<Vector2Int> ViewableTiles() {
 
         for (int i = 0; i < viewingDistance; i++) {
