@@ -11,6 +11,7 @@ public class PlayerController : EntityController {
 
     private void Start() {
         //REMINDER: x and y needs to be adjusted if the Grid got changed by alot (idk how to fix this)
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         gameController.SetTile(x, y, TileValue.Player);
         UpdatePosition(x, y);
         type = TileValue.Player;

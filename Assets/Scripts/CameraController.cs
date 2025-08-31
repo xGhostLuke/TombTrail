@@ -3,9 +3,10 @@ using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-    GameObject player;
-    Vector3 velocity = Vector3.zero;
+    private GameObject player;
+    private Vector3 velocity = Vector3.zero;
     public float smoothTime = 0.3f;
+    [SerializeField] private float diff;
 
     void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -19,7 +20,7 @@ public class CameraController : MonoBehaviour {
     }
 
     private bool NeedToMoveCamera() {
-        if (( Math.Abs(transform.position.y - player.transform.position.y) > 2 ) || ( Math.Abs(transform.position.x - player.transform.position.x) > 2 )) {
+        if (( Math.Abs(transform.position.y - player.transform.position.y) > diff ) || ( Math.Abs(transform.position.x - player.transform.position.x) > diff )) {
             return true;
         }
         return false;

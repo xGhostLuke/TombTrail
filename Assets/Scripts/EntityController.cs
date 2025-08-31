@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Scripts;
 
@@ -12,6 +13,7 @@ public abstract class EntityController : MonoBehaviour {
     //Controller
     protected GameController gameController;
     protected PlayerController playerController;
+    [SerializeField] protected PathfindingScript pathfindingScript;
     //Movement
     [SerializeField] protected int x, y;
     [SerializeField] protected bool hasMovedThisTurn;
@@ -24,17 +26,23 @@ public abstract class EntityController : MonoBehaviour {
     [SerializeField] protected string entityName;
     protected EntityStatus status;
     protected bool isAlive;
+    [SerializeField] protected int viewingDistance;
 
     //abstracts
     public abstract void Movement();
     public abstract void Attack();
 
     private void Awake() {
-        health = maxHealth;
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        hasMovedThisTurn = false;
+    }
+
+    private void Start() {
         isAlive = true;
+        hasMovedThisTurn = false;
+        health = maxHealth;
+        UpdatePosition(x, y);
     }
 
     protected void UpdatePosition(int x, int y) {
@@ -65,6 +73,16 @@ public abstract class EntityController : MonoBehaviour {
             }
         }
     }
+
+    protected List<Vector2Int> ViewableTiles() {
+
+        for (int i = 0; i < viewingDistance; i++) {
+
+        }
+
+        return null;
+    }
+
 
     public void SetHasMovedThisTurn(bool b) {
         hasMovedThisTurn = b;
@@ -104,6 +122,10 @@ public abstract class EntityController : MonoBehaviour {
 
     public EntityStatus getStatus() {
         return status;
+    }
+
+    public int GetViewingDistance() {
+        return viewingDistance;
     }
 
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using NUnit.Framework.Constraints;
 
@@ -7,6 +8,8 @@ using Scripts;
 using UnityEngine;
 
 public class EnemyController : EntityController {
+
+
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -31,12 +34,27 @@ public class EnemyController : EntityController {
     }
 
     override public void Movement() {
-        if (!hasMovedThisTurn) {
-            Vector2 playerPos = gameController.LocatePlayer();
-            if (playerPos.y > y) Move(0, 1, type);
-            else if (playerPos.y < y) Move(0, -1, type);
-            else if (playerPos.x > x) Move(1, 0, type);
-            else if (playerPos.x < x) Move(-1, 0, type);
+        Vector2Int playerPos = gameController.playerController.GetXY();
+
+        Nodes startNode = pathfindingScript.nodes[x, y];
+        Nodes targetNode = pathfindingScript.nodes[playerPos.x, playerPos.y];
+
+
+        List<Nodes> path = pathfindingScript.FindPath(startNode, targetNode);
+
+        if (path != null && path.Count > 0 && path.Count < viewingDistance) {
+
+            Nodes nextStep = path[0];
+
+
+            int dx = nextStep.x - x;
+            int dy = nextStep.y - y;
+
+
+            Move(dx, dy, type);
+        } else {
+
+            hasMovedThisTurn = true;
         }
     }
     override public void Attack() {

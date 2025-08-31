@@ -12,6 +12,7 @@ TagManager:
   - EnemyInfoTab
   - EnemyInfoWindow
   - Interactionlog
+  - Pathfinding
   layers:
   - Default
   - TransparentFX

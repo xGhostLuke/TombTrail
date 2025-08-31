@@ -16,7 +16,7 @@ using UnityEngine.Tilemaps;
 public class GameController : MonoBehaviour {
 
     //controller
-    private PlayerController playerController;
+    public PlayerController playerController;
     private EntityController selectedEntity;
 
     //map
@@ -45,15 +45,19 @@ public class GameController : MonoBehaviour {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
 
+    }
+
+    private void Start() {
         bounds = wallTilemap.cellBounds;
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
         currentTurn = 1;
         tilesArray = new TileValue[mapSizeX + 1, mapSizeY];
         ClearTilesArray();
-        Debug.Log(mapSizeX + " " + mapSizeY);
+        //Debug.Log(mapSizeX + " " + mapSizeY);
         GetObstaclesFromGrid();
         PrintTilesArray();
+
     }
 
     private void Update() {
@@ -99,7 +103,7 @@ public class GameController : MonoBehaviour {
             }
             output += "\n";
         }
-        Debug.Log(output);
+        //Debug.Log(output);
     }
 
     public void SetTile(int x, int y, TileValue value) {
@@ -138,21 +142,28 @@ public class GameController : MonoBehaviour {
         return type == 1 && currentTurn % 2 == 1 || type == 2 && currentTurn % 2 == 0;
     }
 
+
+    //This handles turn management and basic enemy logic for now
+    //Enemy logic should be moved to EnemyController in the future
+    //or maybe rename method to TurnLogic?
     public void NextTurn() {
         RefreshEnemyInfo();
         currentTurn++;
-        Debug.Log(currentTurn);
+        //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
         if (IsMyTurn(2)) {
-            Vector2Int playerPos = LocatePlayer();
+            Vector2Int playerPos = playerController.GetXY();
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
-                    if (GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y) == 1) {
+                    int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
+                    if (distance == 1) {
                         controller.Attack();
                         interactionlog.AddTextToLog("Enemy attacked Player for: " + controller.GetAttackDamage());
                     } else {
-                        controller.Movement();
+                        if (distance <= controller.GetViewingDistance()) {
+                            controller.Movement();
+                        }
                     }
                 }
             }
@@ -181,7 +192,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    private int GetDistanceToTile(int startX, int startY, int endX, int endY) {
+    public int GetDistanceToTile(int startX, int startY, int endX, int endY) {
         return Math.Abs(startX - endX) + Math.Abs(startY - endY);
     }
 
@@ -256,5 +267,13 @@ public class GameController : MonoBehaviour {
 
     private void ShowInteractionlog() {
         interactionlog.ShowWindow();
+    }
+
+    public Vector2Int getMapSize() {
+        return new Vector2Int(mapSizeX, mapSizeY);
+    }
+
+    public void SendMessageToLog(string msg) {
+        interactionlog.AddTextToLog(msg);
     }
 }
