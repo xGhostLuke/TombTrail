@@ -59,5 +59,8 @@ TagManager:
   - name: WallDeco
     uniqueID: 1450677
     locked: 0
+  - name: ShadowMap
+    uniqueID: 3854044665
+    locked: 0
   m_RenderingLayers:
   - Default

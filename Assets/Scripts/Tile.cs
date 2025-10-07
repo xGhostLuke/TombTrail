@@ -11,10 +11,12 @@ namespace Scripts {
     public class Tiles {
         private TileValue value { get; set; }
         private bool inViewRange { get; set; }
+        private bool wasSeen { get; set; }
 
         public Tiles(TileValue value, bool inViewRange) {
             this.value = value;
             this.inViewRange = inViewRange;
+            wasSeen = false;
         }
 
         public TileValue GetTileValue() {
@@ -23,6 +25,14 @@ namespace Scripts {
 
         public void SetTileValue(TileValue value) {
             this.value = value;
+        }
+
+        public void SetWasSeen(bool b) {
+            wasSeen = b;
+        }
+
+        public bool GetWasSeen() {
+            return wasSeen;
         }
     }
 }

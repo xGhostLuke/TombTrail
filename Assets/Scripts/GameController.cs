@@ -122,8 +122,8 @@ public class GameController : MonoBehaviour {
         return tilesArray[x, y].GetTileValue();
     }
 
-    public Vector3 TileToWorldCoordinate(int x, int y) {
-        return new Vector3(x + bounds.xMin, mapSizeY - 1 - y + bounds.yMin, 0);
+    public Vector3Int TileToWorldCoordinate(int x, int y) {
+        return new Vector3Int(x + bounds.xMin, mapSizeY - 1 - y + bounds.yMin, 0);
     }
 
     public Vector2Int WorldToTileCoordinate(Vector3 worldPos) {
@@ -177,7 +177,7 @@ public class GameController : MonoBehaviour {
     private void GetObstaclesFromGrid() {
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
-        tilesArray = new Tiles[mapSizeX, mapSizeY];
+        tilesArray = new Tiles[mapSizeX + 1, mapSizeY + 1];
         InitializeTilesArray();
         foreach (var pos in bounds.allPositionsWithin) {
             if (wallTilemap.HasTile(pos)) {
