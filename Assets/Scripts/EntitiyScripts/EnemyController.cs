@@ -21,7 +21,6 @@ public class EnemyController : EntityController {
         gameController.SetTile(x, y, type);
         UpdatePosition(x, y);
         isAlive = true;
-        status = EntityStatus.Hostile;
     }
 
     private void Update() {
@@ -58,9 +57,9 @@ public class EnemyController : EntityController {
         }
     }
     override public void Attack() {
-        if (health > 0) {
+        if (health > 0 && getStatus() == EntityStatus.Hostile) {
             playerController.AdjustHealth(-attackDamage);
-            gameController.SendMessageToLog("Enemy attacked Player for: " + GetAttackDamage());
+            gameController.SendMessageToLog(GetEntityName() + " attacked Player for: " + GetAttackDamage());
         }
     }
 }

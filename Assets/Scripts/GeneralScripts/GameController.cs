@@ -67,6 +67,9 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Creates an emoty Tile Array
+    /// </summary>
     private void InitializeTilesArray() {
         tilesArray = new Tiles[mapSizeX, mapSizeY];
         for (int i = 0; i < mapSizeX; i++) {
@@ -76,6 +79,9 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Prints the Current Tile Array to the Unity Log
+    /// </summary>
     public void PrintTilesArray() {
         string output = "";
         for (int i = 0; i < mapSizeY; i++) {
@@ -101,23 +107,53 @@ public class GameController : MonoBehaviour {
             }
             output += "\n";
         }
-        //Debug.Log(output);
+        Debug.Log(output);
     }
 
+    /// <summary>
+    /// Gives a Tile at the given Position the given value
+    /// </summary>
+    /// <param name="x">x Cord of Tile</param>
+    /// <param name="y">y Cord of Tile</param>
+    /// <param name="value">Value the Tile should take</param>
     public void SetTile(int x, int y, TileValue value) {
         if (IsValidTile(x, y)) {
             tilesArray[x, y].SetTileValue(value);
         }
     }
 
+    /// <summary>
+    /// Checks if a Tile exists on the given Cords
+    /// </summary>
+    /// <param name="x">x Cord</param>
+    /// <param name="y">y Cord</param>
+    /// <returns>True if Tile exists, else False</returns>
     public bool IsValidTile(int x, int y) {
         return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
+    /// <summary>
+    /// Checks if Tile at current Position is Empty
+    /// </summary>
+    /// <param name="x">x Cord</param>
+    /// <param name="y">y Cord</param>
+    /// <returns>True if Tile is empty, else False</returns>
+    /// <exception cref="IndexOutofBounce">
+    /// if Tile Cords are not in Range of Tile Array
+    /// </exception>
     public bool IsTileEmpty(int x, int y) {
         return tilesArray[x, y].GetTileValue() == TileValue.Empty;
     }
 
+    /// <summary>
+    /// Return Tile Value at given Cords
+    /// </summary>
+    /// <param name="x">x Cord</param>
+    /// <param name="y">y Cord</param>
+    /// <returns>TileValue at Cords</returns>
+    /// /// <exception cref="IndexOutofBounce">
+    /// if Tile Cords are not in Range of Tile Array
+    /// </exception>
     public TileValue GetTileValue(int x, int y) {
         return tilesArray[x, y].GetTileValue();
     }
@@ -132,10 +168,19 @@ public class GameController : MonoBehaviour {
         return new Vector2Int(x, y);
     }
 
+    /// <summary>
+    /// Gets the current position of the PlayerObject.
+    /// </summary>
+    /// <returns>Vector2Int PlayerPos </returns>
     public Vector2Int LocatePlayer() {
         return playerController.GetXY();
     }
 
+    /// <summary>
+    /// Returns the boolean if current turn is Types Turn
+    /// </summary>
+    /// <param name="type">MAGIC NUMBERS Type to Check </param>
+    /// <returns>Boolean</returns>
     public bool IsMyTurn(int type) {
         return type == 1 && currentTurn % 2 == 1 || type == 2 && currentTurn % 2 == 0;
     }
@@ -149,8 +194,14 @@ public class GameController : MonoBehaviour {
         currentTurn++;
         //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
+
+        Vector2Int playerPos = LocatePlayer();
+        List<ItemObject> itemList = ItemOnCurrentPlayerTile(playerPos.x, playerPos.y);
+        if (itemList != null) {
+
+        }
+
         if (IsMyTurn(2)) {
-            Vector2Int playerPos = playerController.GetXY();
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
@@ -198,11 +249,16 @@ public class GameController : MonoBehaviour {
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
-                EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (GetDistanceToTile(LocatePlayer().x, LocatePlayer().y, controller.GetXY().x, controller.GetXY().y) == attackDistance
-                    && controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
-                    controller.AdjustHealth(-playerController.GetAttackDamage());
-                    interactionlog.AddTextToLog("Player attacked Enemy for: " + playerController.GetAttackDamage());
+                EnemyController enemyController = enemy.GetComponent<EnemyController>();
+                Vector2Int playerPos = playerController.GetXY();
+                Vector2Int enemyPos = enemyController.GetXY();
+                if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
+                    break;
+                }
+                if (enemyController.GetXY().x == GetTileHoveredByMouse().x && enemyController.GetXY().y == GetTileHoveredByMouse().y) {
+                    enemyController.AdjustHealth(-playerController.GetAttackDamage() - playerController.getPlayerWeopon().baseDamage);
+                    interactionlog.AddTextToLog("Player attacked " + enemyController.GetEntityName() + " for: " +
+                                                ( playerController.GetAttackDamage() + playerController.getPlayerWeopon().baseDamage ));
                     RefreshEnemyInfo();
                 }
             }
@@ -274,5 +330,19 @@ public class GameController : MonoBehaviour {
 
     public void SendMessageToLog(string msg) {
         interactionlog.AddTextToLog(msg);
+    }
+
+    /// <summary>
+    /// Checks if the Player is standing on an Tile with Items 
+    /// </summary>
+    /// <param name="xPos"></param>
+    /// <param name="yPos"></param>
+    /// <returns>Boolean if yes or no</returns>
+    private List<ItemObject> ItemOnCurrentPlayerTile(int xPos, int yPos) {
+        List<ItemObject> items = tilesArray[xPos, yPos].getItemList();
+        if (items.Count == 0) {
+            return null;
+        }
+        return items;
     }
 }

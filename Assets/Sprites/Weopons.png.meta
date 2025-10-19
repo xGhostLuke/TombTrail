@@ -1,0 +1,715 @@
+fileFormatVersion: 2
+guid: 61a22945bb9daf846bc3d67c5cca516d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1690196649359551571
+    second: Weopons_0
+  - first:
+      213: -3004041070348012063
+    second: Weopons_1
+  - first:
+      213: 525543768069356971
+    second: Weopons_2
+  - first:
+      213: 3651722589443092365
+    second: Weopons_3
+  - first:
+      213: 4919054370981121572
+    second: Weopons_4
+  - first:
+      213: -5350821703907149718
+    second: Weopons_5
+  - first:
+      213: 4906334359509820284
+    second: Weopons_6
+  - first:
+      213: -6296082700401455217
+    second: Weopons_7
+  - first:
+      213: 8410937540811965891
+    second: Weopons_8
+  - first:
+      213: 106217159797298554
+    second: Weopons_9
+  - first:
+      213: -8273645487896059302
+    second: Weopons_10
+  - first:
+      213: -6679356474072838023
+    second: Weopons_11
+  - first:
+      213: 2322509312526838741
+    second: Weopons_12
+  - first:
+      213: 2032947947674804122
+    second: Weopons_13
+  - first:
+      213: -6065165302614821581
+    second: Weopons_14
+  - first:
+      213: -3537846843637475067
+    second: Weopons_15
+  - first:
+      213: 3193031086798356681
+    second: Weopons_16
+  - first:
+      213: -7522503727232537092
+    second: Weopons_17
+  - first:
+      213: -9178570987379016055
+    second: Weopons_18
+  - first:
+      213: 7276920744152515028
+    second: Weopons_19
+  - first:
+      213: -1486440546826222392
+    second: Weopons_20
+  - first:
+      213: -1446589426829184246
+    second: Weopons_21
+  - first:
+      213: -5979497633791290421
+    second: Weopons_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Weopons_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 113
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da35e5a3a173b88e0800000000000000
+      internalID: -1690196649359551571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_BrokenSword
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 97
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e5f83700908f46d0800000000000000
+      internalID: -3004041070348012063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_SwordLvL1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 97
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: badb1b9c54b1b4700800000000000000
+      internalID: 525543768069356971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 97
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8f6602f8568da230800000000000000
+      internalID: 3651722589443092365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 65
+        width: 12
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42e892d53edf34440800000000000000
+      internalID: 4919054370981121572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 65
+        width: 12
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a68f92a92001eb5b0800000000000000
+      internalID: -5350821703907149718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 65
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7360e7ea1dc61440800000000000000
+      internalID: 4906334359509820284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 65
+        width: 12
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8fc61e5422df98a0800000000000000
+      internalID: -6296082700401455217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_8
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 80
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c5481c5127a9b470800000000000000
+      internalID: 8410937540811965891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_9
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 48
+        width: 8
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a75d4cea1fb597100800000000000000
+      internalID: 106217159797298554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_10
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 80
+        width: 12
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a522170b34b1e2d80800000000000000
+      internalID: -8273645487896059302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_11
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 80
+        width: 10
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 970dea2fca82e43a0800000000000000
+      internalID: -6679356474072838023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_12
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 80
+        width: 10
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dbe2b02ae53b3020800000000000000
+      internalID: 2322509312526838741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_13
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 33
+        width: 8
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9f140c236b763c10800000000000000
+      internalID: 2032947947674804122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_14
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 33
+        width: 12
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3357e99ba4434dba0800000000000000
+      internalID: -6065165302614821581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_15
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 33
+        width: 14
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 509504f3a0b07eec0800000000000000
+      internalID: -3537846843637475067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_16
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 33
+        width: 11
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c045652bdcef4c20800000000000000
+      internalID: 3193031086798356681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_17
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 48
+        width: 9
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfda0cc47b2ba9790800000000000000
+      internalID: -7522503727232537092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_18
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 50
+        width: 9
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e319f215a2f9080800000000000000
+      internalID: -9178570987379016055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_19
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1
+        width: 7
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d1c1edacd0dcf460800000000000000
+      internalID: 7276920744152515028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_20
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 1
+        width: 10
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c48faab23a1f5be0800000000000000
+      internalID: -1486440546826222392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_21
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 1
+        width: 11
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a03b206a49eacebe0800000000000000
+      internalID: -1446589426829184246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weopons_22
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 1
+        width: 12
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc3d492359e840da0800000000000000
+      internalID: -5979497633791290421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: cc374ff7bb52dd5408b1a85741e6359f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Weopons_0: -1690196649359551571
+      Weopons_10: -8273645487896059302
+      Weopons_11: -6679356474072838023
+      Weopons_12: 2322509312526838741
+      Weopons_13: 2032947947674804122
+      Weopons_14: -6065165302614821581
+      Weopons_15: -3537846843637475067
+      Weopons_16: 3193031086798356681
+      Weopons_17: -7522503727232537092
+      Weopons_18: -9178570987379016055
+      Weopons_19: 7276920744152515028
+      Weopons_20: -1486440546826222392
+      Weopons_21: -1446589426829184246
+      Weopons_22: -5979497633791290421
+      Weopons_3: 3651722589443092365
+      Weopons_4: 4919054370981121572
+      Weopons_5: -5350821703907149718
+      Weopons_6: 4906334359509820284
+      Weopons_7: -6296082700401455217
+      Weopons_8: 8410937540811965891
+      Weopons_9: 106217159797298554
+      Weopons_BrokenSword: -3004041070348012063
+      Weopons_SwordLvL1: 525543768069356971
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

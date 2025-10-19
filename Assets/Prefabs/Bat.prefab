@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -742617257
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: -6182296104549173301, guid: 185ea53ad126a3447b46f8be02cffe43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -100,10 +100,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9926331bda4e69b4c8b68b69cb03d251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Bat
-  playerController: {fileID: 0}
+  pathfindingScript: {fileID: 0}
   x: 15
   y: 15
   hasMovedThisTurn: 0
+  health: 0
   maxHealth: 10
   attackDamage: 10
+  entityName: Bat
+  status: 1
+  viewingDistance: 0
