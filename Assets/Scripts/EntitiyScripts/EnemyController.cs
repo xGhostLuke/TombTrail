@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-
-using NUnit.Framework.Constraints;
 
 using Scripts;
 
@@ -9,7 +6,7 @@ using UnityEngine;
 
 public class EnemyController : EntityController {
 
-
+    private List<ItemObject> itemDrops = new List<ItemObject>();
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -56,10 +53,15 @@ public class EnemyController : EntityController {
             hasMovedThisTurn = true;
         }
     }
+
+    public ItemObject dropItem() {
+        return itemDrops[Random.Range(0, itemDrops.Count)];
+    }
+
     override public void Attack() {
         if (health > 0 && getStatus() == EntityStatus.Hostile) {
             playerController.AdjustHealth(-attackDamage);
-            gameController.SendMessageToLog(GetEntityName() + " attacked Player for: " + GetAttackDamage());
+            infoTab.HitLogMessage(this, playerController);
         }
     }
 }

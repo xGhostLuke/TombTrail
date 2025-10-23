@@ -5,12 +5,8 @@ using Scripts;
 
 using Unity.VisualScripting;
 
-using UnityEditor.PackageManager;
-using UnityEditor.ProjectWindowCallback;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
 public class GameController : MonoBehaviour {
@@ -32,8 +28,9 @@ public class GameController : MonoBehaviour {
     private GameObject tileHighlighter;
 
     //windows
-    private InteractionLogTextScript interactionlog;
-    private EntityInfoTabScript entityInfoTabScript;
+    public InfoTabsScript infoTab;
+
+    [SerializeField] private EntityInfoTabScript entityInfoTabScript;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -41,9 +38,11 @@ public class GameController : MonoBehaviour {
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
-        interactionlog = GameObject.FindGameObjectWithTag("Interactionlog").GetComponent<InteractionLogTextScript>();
+        //entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
+
+
+        infoTab = GetComponent<InfoTabsScript>();
 
     }
 
@@ -63,18 +62,18 @@ public class GameController : MonoBehaviour {
             GetEntityInfo();
         }
         if (Keyboard.current.lKey.wasPressedThisFrame) {
-            ShowInteractionlog();
+            infoTab.ShowInteractionlog();
         }
     }
 
     /// <summary>
-    /// Creates an emoty Tile Array
+    /// Creates an empty Tile Array
     /// </summary>
     private void InitializeTilesArray() {
         tilesArray = new Tiles[mapSizeX, mapSizeY];
         for (int i = 0; i < mapSizeX; i++) {
             for (int j = 0; j < mapSizeY; j++) {
-                tilesArray[i, j] = new Tiles(TileValue.Empty, false);
+                tilesArray[i, j] = new Tiles(TileValue.Empty);
             }
         }
     }
@@ -190,7 +189,7 @@ public class GameController : MonoBehaviour {
     //Enemy logic should be moved to EnemyController in the future
     //or maybe rename method to TurnLogic?
     public void NextTurn() {
-        RefreshEnemyInfo();
+        infoTab.RefreshEnemyInfo(selectedEntity);
         currentTurn++;
         //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
@@ -205,7 +204,9 @@ public class GameController : MonoBehaviour {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
+
                     int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
+
                     if (distance == 1) {
                         controller.Attack();
                     } else {
@@ -244,8 +245,8 @@ public class GameController : MonoBehaviour {
         return Math.Abs(startX - endX) + Math.Abs(startY - endY);
     }
 
-    private void PlayerAttack() { //This is here for now, should be in the PlayerController tho
-        RefreshEnemyInfo();
+    private void PlayerAttack() { //This is here for now, should be in the PlayerController tho. Update idk maybe this should stay here
+        infoTab.RefreshEnemyInfo(selectedEntity);
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
@@ -256,10 +257,9 @@ public class GameController : MonoBehaviour {
                     break;
                 }
                 if (enemyController.GetXY().x == GetTileHoveredByMouse().x && enemyController.GetXY().y == GetTileHoveredByMouse().y) {
-                    enemyController.AdjustHealth(-playerController.GetAttackDamage() - playerController.getPlayerWeopon().baseDamage);
-                    interactionlog.AddTextToLog("Player attacked " + enemyController.GetEntityName() + " for: " +
-                                                ( playerController.GetAttackDamage() + playerController.getPlayerWeopon().baseDamage ));
-                    RefreshEnemyInfo();
+                    enemyController.AdjustHealth(-playerController.GetAttackDamage());
+                    infoTab.HitLogMessage(playerController, enemyController);
+                    infoTab.RefreshEnemyInfo(selectedEntity);
                 }
             }
             NextTurn();
@@ -268,6 +268,7 @@ public class GameController : MonoBehaviour {
 
     private void GetEntityInfo() {
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy) {
+            //This is prob. very consuming but works for now. Should be reworked in the future 
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
@@ -293,17 +294,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    private void RefreshEnemyInfo() {
-        if (selectedEntity != null) {
-            entityInfoTabScript.LoadStats(
-                selectedEntity.GetEntityName(),
-                selectedEntity.GetHealth().ToString(),
-                selectedEntity.GetAttackDamage().ToString(),
-                selectedEntity.GetMaxHealth().ToString(),
-                selectedEntity.getStatus().ToString()
-            );
-        }
-    }
+
 
     public Vector2Int GetTileHoveredByMouse() {
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
@@ -320,16 +311,9 @@ public class GameController : MonoBehaviour {
         return new Vector2Int(arrayPos.x, arrayPos.y);
     }
 
-    private void ShowInteractionlog() {
-        interactionlog.ShowWindow();
-    }
 
     public Vector2Int getMapSize() {
         return new Vector2Int(mapSizeX, mapSizeY);
-    }
-
-    public void SendMessageToLog(string msg) {
-        interactionlog.AddTextToLog(msg);
     }
 
     /// <summary>
@@ -340,9 +324,23 @@ public class GameController : MonoBehaviour {
     /// <returns>Boolean if yes or no</returns>
     private List<ItemObject> ItemOnCurrentPlayerTile(int xPos, int yPos) {
         List<ItemObject> items = tilesArray[xPos, yPos].getItemList();
+
         if (items.Count == 0) {
+            HideWeoponList();
             return null;
         }
+        Debug.Log(items.ToString());
+        ShowWeoponList();
         return items;
+    }
+
+    //TODO!
+
+    private void ShowWeoponList() {
+
+    }
+
+    private void HideWeoponList() {
+
     }
 }

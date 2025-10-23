@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.UIElements;
 
 public class PlayerController : EntityController {
 
@@ -37,12 +38,4 @@ public class PlayerController : EntityController {
     }
 
     override public void Attack() => throw new NotImplementedException(); //Managed over Gamecontroller, works for now, maybe rework in the future
-
-    public WeoponObeject getPlayerWeopon() {
-        return playerWeopon;
-    }
-
-    public void setPlayerWeopon(WeoponObeject weopon) {
-        playerWeopon = weopon;
-    }
 }

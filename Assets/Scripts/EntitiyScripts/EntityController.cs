@@ -13,6 +13,7 @@ public abstract class EntityController : MonoBehaviour {
     //Controller
     protected GameController gameController;
     protected PlayerController playerController;
+    [SerializeField] protected InfoTabsScript infoTab;
     [SerializeField] protected PathfindingScript pathfindingScript;
     //Movement
     [SerializeField] protected int x, y;
@@ -28,6 +29,8 @@ public abstract class EntityController : MonoBehaviour {
     protected bool isAlive;
     [SerializeField] protected int viewingDistance;
 
+    private WeoponObeject weopon;
+
     //abstracts
     public abstract void Movement();
     public abstract void Attack();
@@ -36,9 +39,11 @@ public abstract class EntityController : MonoBehaviour {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
     }
 
     private void Start() {
+        infoTab = gameController.infoTab;
         isAlive = true;
         hasMovedThisTurn = false;
         health = maxHealth;
@@ -74,18 +79,6 @@ public abstract class EntityController : MonoBehaviour {
         }
     }
 
-
-    //WIP
-    protected List<Vector2Int> ViewableTiles() {
-
-        for (int i = 0; i < viewingDistance; i++) {
-
-        }
-
-        return null;
-    }
-
-
     public void SetHasMovedThisTurn(bool b) {
         hasMovedThisTurn = b;
     }
@@ -111,7 +104,7 @@ public abstract class EntityController : MonoBehaviour {
     }
 
     public int GetAttackDamage() {
-        return attackDamage;
+        return attackDamage + weopon.baseDamage;
     }
 
     public int GetMaxHealth() {
@@ -128,6 +121,14 @@ public abstract class EntityController : MonoBehaviour {
 
     public int GetViewingDistance() {
         return viewingDistance;
+    }
+
+    public void setPlayerWeopon(WeoponObeject weopon) {
+        this.weopon = weopon;
+    }
+
+    public WeoponObeject getEntityWeopon() {
+        return weopon;
     }
 
 }
