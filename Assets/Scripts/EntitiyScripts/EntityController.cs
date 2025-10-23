@@ -29,7 +29,7 @@ public abstract class EntityController : MonoBehaviour {
     protected bool isAlive;
     [SerializeField] protected int viewingDistance;
 
-    private WeoponObeject weopon;
+    [SerializeField] private WeoponObeject weopon;
 
     //abstracts
     public abstract void Movement();
@@ -39,6 +39,7 @@ public abstract class EntityController : MonoBehaviour {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
 
     }
 
@@ -96,6 +97,7 @@ public abstract class EntityController : MonoBehaviour {
     }
 
     public int GetHealth() {
+        //Debug.Log("Leben abgerufen");
         return health;
     }
 
@@ -104,18 +106,26 @@ public abstract class EntityController : MonoBehaviour {
     }
 
     public int GetAttackDamage() {
-        return attackDamage + weopon.baseDamage;
+        if (weopon != null) {
+            Debug.Log("Schaden mit Waffe abgerufen");
+            return attackDamage + getEntityWeopon().baseDamage;
+        }
+        Debug.Log("No Weopon set");
+        return attackDamage;
     }
 
     public int GetMaxHealth() {
+        // Debug.Log("Max Health abgerufen");
         return maxHealth;
     }
 
     public string GetEntityName() {
+        //Debug.Log("Name abgerufen");
         return entityName;
     }
 
     public EntityStatus getStatus() {
+        //Debug.Log("Status abgerufen");
         return status;
     }
 

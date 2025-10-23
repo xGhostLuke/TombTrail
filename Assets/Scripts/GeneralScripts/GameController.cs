@@ -38,7 +38,7 @@ public class GameController : MonoBehaviour {
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
-        //entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
+        entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
 
@@ -59,6 +59,7 @@ public class GameController : MonoBehaviour {
     private void Update() {
         PlayerAttack();
         if (Mouse.current.rightButton.wasPressedThisFrame) {
+            entityInfoTabScript.SetActive(true);
             GetEntityInfo();
         }
         if (Keyboard.current.lKey.wasPressedThisFrame) {
@@ -81,7 +82,7 @@ public class GameController : MonoBehaviour {
     /// <summary>
     /// Prints the Current Tile Array to the Unity Log
     /// </summary>
-    public void PrintTilesArray() {
+    public string PrintTilesArray() {
         string output = "";
         for (int i = 0; i < mapSizeY; i++) {
             for (int j = 0; j < mapSizeX; j++) {
@@ -106,7 +107,7 @@ public class GameController : MonoBehaviour {
             }
             output += "\n";
         }
-        Debug.Log(output);
+        return output;
     }
 
     /// <summary>
@@ -189,9 +190,7 @@ public class GameController : MonoBehaviour {
     //Enemy logic should be moved to EnemyController in the future
     //or maybe rename method to TurnLogic?
     public void NextTurn() {
-        infoTab.RefreshEnemyInfo(selectedEntity);
         currentTurn++;
-        //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
 
         Vector2Int playerPos = LocatePlayer();
@@ -201,6 +200,7 @@ public class GameController : MonoBehaviour {
         }
 
         if (IsMyTurn(2)) {
+            infoTab.RefreshEnemyInfo(selectedEntity);
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
@@ -216,7 +216,9 @@ public class GameController : MonoBehaviour {
                     }
                 }
             }
+            infoTab.RefreshEnemyInfo(selectedEntity);
             NextTurn();
+            return;
         }
     }
 
@@ -246,17 +248,16 @@ public class GameController : MonoBehaviour {
     }
 
     private void PlayerAttack() { //This is here for now, should be in the PlayerController tho. Update idk maybe this should stay here
-        infoTab.RefreshEnemyInfo(selectedEntity);
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
                 EnemyController enemyController = enemy.GetComponent<EnemyController>();
                 Vector2Int playerPos = playerController.GetXY();
                 Vector2Int enemyPos = enemyController.GetXY();
-                if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
-                    break;
-                }
                 if (enemyController.GetXY().x == GetTileHoveredByMouse().x && enemyController.GetXY().y == GetTileHoveredByMouse().y) {
+                    if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
+                        break;
+                    }
                     enemyController.AdjustHealth(-playerController.GetAttackDamage());
                     infoTab.HitLogMessage(playerController, enemyController);
                     infoTab.RefreshEnemyInfo(selectedEntity);
@@ -272,6 +273,7 @@ public class GameController : MonoBehaviour {
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
+
                     entityInfoTabScript.ShowWindow(
                         controller.GetEntityName(),
                         controller.GetHealth().ToString(),
@@ -283,6 +285,7 @@ public class GameController : MonoBehaviour {
                 }
             }
         } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Player) {
+
             entityInfoTabScript.ShowWindow(
                         playerController.GetEntityName(),
                         playerController.GetHealth().ToString(),
@@ -293,8 +296,6 @@ public class GameController : MonoBehaviour {
             selectedEntity = playerController;
         }
     }
-
-
 
     public Vector2Int GetTileHoveredByMouse() {
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();

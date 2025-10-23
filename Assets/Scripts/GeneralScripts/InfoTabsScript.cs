@@ -16,17 +16,6 @@ public class InfoTabsScript : MonoBehaviour {
         interactionlog = GameObject.FindGameObjectWithTag("Interactionlog").GetComponent<InteractionLogTextScript>();
     }
 
-    public void RefreshEnemyInfo(EntityController entity) {
-        if (entity != null) {
-            entityInfoTabScript.LoadStats(
-                entity.GetEntityName(),
-                entity.GetHealth().ToString(),
-                entity.GetAttackDamage().ToString(),
-                entity.GetMaxHealth().ToString(),
-                entity.getStatus().ToString()
-            );
-        }
-    }
 
     public void ShowInteractionlog() {
         interactionlog.ShowWindow();
@@ -40,4 +29,17 @@ public class InfoTabsScript : MonoBehaviour {
     public void HitLogMessage(EntityController attacker, EntityController defender) {
         StandardLogMessage(attacker.GetEntityName() + " attacked " + defender.GetEntityName() + " for " + attacker.GetAttackDamage() + " DMG!");
     }
+
+    public void RefreshEnemyInfo(EntityController entity) {
+        if (entity != null && entityInfoTabScript.GetActive()) {
+            entityInfoTabScript.LoadStats(
+                entity.GetEntityName(),
+                entity.GetHealth().ToString(),
+                entity.GetAttackDamage().ToString(),
+                entity.GetMaxHealth().ToString(),
+                entity.getStatus().ToString()
+            );
+        }
+    }
+
 }

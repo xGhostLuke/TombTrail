@@ -11,6 +11,7 @@ public class EnemyController : EntityController {
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        infoTab = gameController.infoTab;
     }
 
     private void Start() {
