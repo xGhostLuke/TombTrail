@@ -396,6 +396,7 @@ public class GameController : MonoBehaviour {
                         );
             xOffSet += spacing; //magicNumber
             newItemListElem.GetComponent<Image>().sprite = item.ItemSprite;
+            newItemListElem.GetComponent<ItemListElementScript>().SetItemObject(item);
         }
     }
 
@@ -416,5 +417,9 @@ public class GameController : MonoBehaviour {
             output += item.name + " || ";
         }
         return output;
+    }
+
+    public void setPlayerWeopon(WeoponObeject weopon) {
+        playerController.setPlayerWeopon(weopon);
     }
 }

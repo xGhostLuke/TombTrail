@@ -754,11 +754,11 @@ MonoBehaviour:
   hasMovedThisTurn: 0
   health: 50
   maxHealth: 50
-  attackDamage: 0
+  attackDamage: 5
   entityName: Player
   status: 0
   viewingDistance: 0
-  weopon: {fileID: 11400000, guid: f5f95f79f675d2f42a24a1dddc3af100, type: 2}
+  weopon: {fileID: 11400000, guid: a5b118921159737409fce1551e68b9cc, type: 2}
 --- !u!4 &344857301
 Transform:
   m_ObjectHideFlags: 0
