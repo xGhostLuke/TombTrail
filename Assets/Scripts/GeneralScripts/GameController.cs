@@ -393,7 +393,7 @@ public class GameController : MonoBehaviour {
                         );
             xOffSet += spacing;
             newItemListElem.GetComponent<Image>().sprite = item.ItemSprite;
-            newItemListElem.GetComponent<ItemListElementScript>().SetItemObject(( WeoponObeject ) item);
+            newItemListElem.GetComponent<ItemListElementScript>().SetItemObject(item);
         }
     }
 
@@ -439,5 +439,14 @@ public class GameController : MonoBehaviour {
     public void removeItemFromTile(int xPos, int yPos, ItemObject item) {
         GetTile(xPos, yPos).RemoveItemFromList(item);
         ReloadItemListElements();
+    }
+
+    /// <summary>
+    /// Method to adjust the curent Player Health over the GameController object
+    /// </summary>
+    /// <param name="adjust">int value to adjust</param>
+    public void AdjustPlayerHealth(int adjust) {
+        playerController.AdjustHealth(adjust);
+        Debug.Log("Increased Playerhealth by: " + adjust);
     }
 }

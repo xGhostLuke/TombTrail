@@ -1,3 +1,5 @@
+using Unity.VisualScripting;
+
 using UnityEngine;
 
 public class ItemListElementScript : MonoBehaviour {
@@ -12,16 +14,22 @@ public class ItemListElementScript : MonoBehaviour {
     /// <summary>
     /// Method used in the Button of the Item list Element
     /// Triggers the setPlayerWeoponMethod to set Item as Player Weopon 
-    /// TODO: If the Item isnt a weopon nothing happens for now
+    /// Prints out a Log message if the item is from an unknown type
     /// </summary>
     public void PressedOnListElement() {
-        if (GetItem() is WeoponObeject) {
-            gameController.setPlayerWeopon(( WeoponObeject ) GetItem());
-            Debug.Log("Player Weopon set to: " + GetItem().name);
-            Vector2Int playerPos = gameController.LocatePlayer();
-            gameController.removeItemFromTile(playerPos.x, playerPos.y, GetItem());
-        } else {
-            Debug.Log("Item pickup not Implemented");
+        Vector2Int playerPos = gameController.LocatePlayer();
+        switch (GetItem()) {
+            case WeoponObeject weoponObeject:
+                gameController.setPlayerWeopon(weoponObeject);
+                gameController.removeItemFromTile(playerPos.x, playerPos.y, weoponObeject);
+                break;
+            case HealingObject healingObject:
+                gameController.AdjustPlayerHealth(healingObject.GetHealingEffect());
+                gameController.removeItemFromTile(playerPos.x, playerPos.y, healingObject);
+                break;
+            default:
+                Debug.Log("Item Type pickup not Implemented");
+                break;
         }
     }
 
