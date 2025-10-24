@@ -3,7 +3,10 @@ using UnityEngine;
 public class WindowController : MonoBehaviour {
     [SerializeField] protected CanvasGroup cg;
 
+    private bool active;
+
     public void ShowWindow() {
+        SetActive(false);
         cg.alpha = 1f;
         cg.interactable = true;
         cg.blocksRaycasts = true;
@@ -15,4 +18,13 @@ public class WindowController : MonoBehaviour {
         cg.interactable = false;
         cg.blocksRaycasts = false;
     }
+
+    public bool GetActive() {
+        return active;
+    }
+
+    public void SetActive(bool b) {
+        active = b;
+    }
+
 }

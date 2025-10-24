@@ -1,17 +1,21 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using NUnit.Framework;
 
 using Scripts;
 
+using Unity.Mathematics;
 using Unity.VisualScripting;
-
-using UnityEditor.PackageManager;
-using UnityEditor.ProjectWindowCallback;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -32,8 +36,12 @@ public class GameController : MonoBehaviour {
     private GameObject tileHighlighter;
 
     //windows
-    private InteractionLogTextScript interactionlog;
-    private EntityInfoTabScript entityInfoTabScript;
+    public InfoTabsScript infoTab;
+
+    [SerializeField] private EntityInfoTabScript entityInfoTabScript;
+    [SerializeField] private GameObject itemsOnTile;
+    private List<ItemObject> currentItemList = new List<ItemObject>();
+    [SerializeField] private GameObject itemListElement;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -41,9 +49,12 @@ public class GameController : MonoBehaviour {
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
         targetTilemap = GameObject.FindGameObjectWithTag("FloorTilemap").GetComponent<Tilemap>();
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
-        interactionlog = GameObject.FindGameObjectWithTag("Interactionlog").GetComponent<InteractionLogTextScript>();
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        itemsOnTile = GameObject.FindGameObjectWithTag("ItemsOnTile");
+
+
+        infoTab = GetComponent<InfoTabsScript>();
 
     }
 
@@ -60,21 +71,22 @@ public class GameController : MonoBehaviour {
     private void Update() {
         PlayerAttack();
         if (Mouse.current.rightButton.wasPressedThisFrame) {
+            entityInfoTabScript.SetActive(true);
             GetEntityInfo();
         }
         if (Keyboard.current.lKey.wasPressedThisFrame) {
-            ShowInteractionlog();
+            infoTab.ShowInteractionlog();
         }
     }
 
     /// <summary>
-    /// Creates an emoty Tile Array
+    /// Creates an empty Tile Array
     /// </summary>
     private void InitializeTilesArray() {
         tilesArray = new Tiles[mapSizeX, mapSizeY];
         for (int i = 0; i < mapSizeX; i++) {
             for (int j = 0; j < mapSizeY; j++) {
-                tilesArray[i, j] = new Tiles(TileValue.Empty, false);
+                tilesArray[i, j] = new Tiles(TileValue.Empty);
             }
         }
     }
@@ -82,7 +94,7 @@ public class GameController : MonoBehaviour {
     /// <summary>
     /// Prints the Current Tile Array to the Unity Log
     /// </summary>
-    public void PrintTilesArray() {
+    public string PrintTilesArray() {
         string output = "";
         for (int i = 0; i < mapSizeY; i++) {
             for (int j = 0; j < mapSizeX; j++) {
@@ -107,7 +119,7 @@ public class GameController : MonoBehaviour {
             }
             output += "\n";
         }
-        Debug.Log(output);
+        return output;
     }
 
     /// <summary>
@@ -120,6 +132,13 @@ public class GameController : MonoBehaviour {
         if (IsValidTile(x, y)) {
             tilesArray[x, y].SetTileValue(value);
         }
+    }
+
+    public Tiles GetTile(int x, int y) {
+        if (!IsValidTile(x, y)) {
+            return null;
+        }
+        return tilesArray[x, y];
     }
 
     /// <summary>
@@ -190,22 +209,23 @@ public class GameController : MonoBehaviour {
     //Enemy logic should be moved to EnemyController in the future
     //or maybe rename method to TurnLogic?
     public void NextTurn() {
-        RefreshEnemyInfo();
         currentTurn++;
-        //Debug.Log(currentTurn);
         ResetHasMovedThisTurn();
 
         Vector2Int playerPos = LocatePlayer();
-        List<ItemObject> itemList = ItemOnCurrentPlayerTile(playerPos.x, playerPos.y);
-        if (itemList != null) {
+        ReloadItemOnTileList(playerPos.x, playerPos.y);
+        if (currentItemList != null) {
 
         }
 
         if (IsMyTurn(2)) {
+            infoTab.RefreshEnemyInfo(selectedEntity);
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
+
                     int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
+
                     if (distance == 1) {
                         controller.Attack();
                     } else {
@@ -215,7 +235,9 @@ public class GameController : MonoBehaviour {
                     }
                 }
             }
+            infoTab.RefreshEnemyInfo(selectedEntity);
             NextTurn();
+            return;
         }
     }
 
@@ -244,22 +266,20 @@ public class GameController : MonoBehaviour {
         return Math.Abs(startX - endX) + Math.Abs(startY - endY);
     }
 
-    private void PlayerAttack() { //This is here for now, should be in the PlayerController tho
-        RefreshEnemyInfo();
+    private void PlayerAttack() { //This is here for now, should be in the PlayerController tho. Update idk maybe this should stay here
         int attackDistance = 1;
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
             foreach (GameObject enemy in enemyList) {
                 EnemyController enemyController = enemy.GetComponent<EnemyController>();
                 Vector2Int playerPos = playerController.GetXY();
                 Vector2Int enemyPos = enemyController.GetXY();
-                if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
-                    break;
-                }
                 if (enemyController.GetXY().x == GetTileHoveredByMouse().x && enemyController.GetXY().y == GetTileHoveredByMouse().y) {
-                    enemyController.AdjustHealth(-playerController.GetAttackDamage() - playerController.getPlayerWeopon().baseDamage);
-                    interactionlog.AddTextToLog("Player attacked " + enemyController.GetEntityName() + " for: " +
-                                                ( playerController.GetAttackDamage() + playerController.getPlayerWeopon().baseDamage ));
-                    RefreshEnemyInfo();
+                    if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
+                        break;
+                    }
+                    enemyController.AdjustHealth(-playerController.GetAttackDamage());
+                    infoTab.HitLogMessage(playerController, enemyController);
+                    infoTab.RefreshEnemyInfo(selectedEntity);
                 }
             }
             NextTurn();
@@ -268,9 +288,11 @@ public class GameController : MonoBehaviour {
 
     private void GetEntityInfo() {
         if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy) {
+            //This is prob. very consuming but works for now. Should be reworked in the future 
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
                 if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
+
                     entityInfoTabScript.ShowWindow(
                         controller.GetEntityName(),
                         controller.GetHealth().ToString(),
@@ -282,6 +304,7 @@ public class GameController : MonoBehaviour {
                 }
             }
         } else if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Player) {
+
             entityInfoTabScript.ShowWindow(
                         playerController.GetEntityName(),
                         playerController.GetHealth().ToString(),
@@ -290,18 +313,6 @@ public class GameController : MonoBehaviour {
                          playerController.getStatus().ToString()
             );
             selectedEntity = playerController;
-        }
-    }
-
-    private void RefreshEnemyInfo() {
-        if (selectedEntity != null) {
-            entityInfoTabScript.LoadStats(
-                selectedEntity.GetEntityName(),
-                selectedEntity.GetHealth().ToString(),
-                selectedEntity.GetAttackDamage().ToString(),
-                selectedEntity.GetMaxHealth().ToString(),
-                selectedEntity.getStatus().ToString()
-            );
         }
     }
 
@@ -320,29 +331,90 @@ public class GameController : MonoBehaviour {
         return new Vector2Int(arrayPos.x, arrayPos.y);
     }
 
-    private void ShowInteractionlog() {
-        interactionlog.ShowWindow();
-    }
 
     public Vector2Int getMapSize() {
         return new Vector2Int(mapSizeX, mapSizeY);
     }
 
-    public void SendMessageToLog(string msg) {
-        interactionlog.AddTextToLog(msg);
+    /// <summary>
+    /// Get the Items on a certain Tile
+    /// </summary>
+    /// <param name="xPos">xPos of the Tile to check</param>
+    /// <param name="yPos">yPos of the Tile to check</param>
+    /// <returns>List with Items on Tile if the isnt empty</returns>
+    private List<ItemObject> ItemOnTileInLog(int xPos, int yPos) {
+
+        if (currentItemList.Count == 0) {
+            HideWeoponList();
+            Debug.Log("No Items on Tile " + xPos + "<||>" + yPos);
+            return null;
+        }
+        Debug.Log("Items on Tile " + xPos + "<||>" + yPos + ": " + ItemListToString(currentItemList));
+        ShowWeoponList();
+        return currentItemList;
     }
 
     /// <summary>
-    /// Checks if the Player is standing on an Tile with Items 
+    /// Gets the current ItemList of a Tile
     /// </summary>
-    /// <param name="xPos"></param>
-    /// <param name="yPos"></param>
-    /// <returns>Boolean if yes or no</returns>
-    private List<ItemObject> ItemOnCurrentPlayerTile(int xPos, int yPos) {
-        List<ItemObject> items = tilesArray[xPos, yPos].getItemList();
-        if (items.Count == 0) {
-            return null;
+    /// <param name="xPos">xPos of the Tile</param>
+    /// <param name="yPos">yPos of the Tile</param>
+    private void ReloadItemOnTileList(int xPos, int yPos) {
+        currentItemList = tilesArray[xPos, yPos].getItemList();
+        ItemOnTileInLog(xPos, yPos);
+    }
+
+    //TODO!
+    private void ShowWeoponList() {
+        itemsOnTile.SetActive(true);
+        ReloadWeoponListElements();
+    }
+
+    private void HideWeoponList() {
+        itemsOnTile.SetActive(false);
+        ReloadWeoponListElements();
+    }
+
+    /// <summary>
+    /// Creates a new GameOject for every Item in the current ItemList
+    /// which displays the currentItemList 
+    /// TODO: Player should be able to interact with this List ex. with Buttons to pick up the items 
+    /// item list has to be updated accordingly then.
+    /// </summary>
+    private void ReloadWeoponListElements() {
+        if (currentItemList == null) {
+            return;
         }
-        return items;
+        DeleteAllChildrenOfParent(itemsOnTile);
+        float xOffSet = 0;
+        float spacing = 50;
+        foreach (ItemObject item in currentItemList) {
+            GameObject newItemListElem = Instantiate(itemListElement,
+                        new Vector3(itemsOnTile.transform.position.x + xOffSet, itemsOnTile.transform.position.y),
+                        itemsOnTile.transform.rotation,
+                        itemsOnTile.transform
+                        );
+            xOffSet += spacing; //magicNumber
+            newItemListElem.GetComponent<Image>().sprite = item.ItemSprite;
+        }
+    }
+
+
+    /// <summary>
+    /// Distroys all Children of a parent
+    /// </summary>
+    /// <param name="parent">parent with children</param>
+    private void DeleteAllChildrenOfParent(GameObject parent) {
+        foreach (Transform child in parent.transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    private string ItemListToString(List<ItemObject> items) {
+        string output = "";
+        foreach (ItemObject item in items) {
+            output += item.name + " || ";
+        }
+        return output;
     }
 }

@@ -1,22 +1,15 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Scripts;
 
-using UnityEngine.Tilemaps;
-
 public class Tiles {
     private TileValue value { get; set; }
-    private bool inViewRange { get; set; }
     private bool wasSeen { get; set; }
 
-    private List<ItemObject> itemsOnTile;
+    private List<ItemObject> itemsOnTile = new List<ItemObject>();
 
-    public Tiles(TileValue value, bool inViewRange) {
+    public Tiles(TileValue value) {
         this.value = value;
-        this.inViewRange = inViewRange;
         wasSeen = false;
     }
 

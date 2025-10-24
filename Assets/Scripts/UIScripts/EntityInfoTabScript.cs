@@ -9,7 +9,11 @@ using UnityEditor.Rendering.Canvas.ShaderGraph;
 
 using UnityEngine;
 
+
 public class EntityInfoTabScript : WindowController {
+
+
+
     [SerializeField] private TextMeshProUGUI EntityDamageText;
     [SerializeField] private TextMeshProUGUI EntityHealthText;
     [SerializeField] private TextMeshProUGUI EntityNameText;
@@ -27,6 +31,7 @@ public class EntityInfoTabScript : WindowController {
     }
 
     public void ShowWindow(string name, string health, string damage, string maxhealth, string status) {
+        SetActive(true);
         cg.alpha = 1f;
         cg.interactable = true;
         cg.blocksRaycasts = true;

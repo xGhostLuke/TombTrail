@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722430efc1f2a664db542ad592a7fff8, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
+  ItemSprite: {fileID: -3004041070348012063, guid: 61a22945bb9daf846bc3d67c5cca516d, type: 3}
   weoponName: Broken Sword
   baseDamage: 10
   range: 1
   actionCost: 0
   effect: 0
   ChanceForEffekt: 0
-  weoponSprite: {fileID: -3004041070348012063, guid: 61a22945bb9daf846bc3d67c5cca516d, type: 3}

@@ -13,6 +13,7 @@ public abstract class EntityController : MonoBehaviour {
     //Controller
     protected GameController gameController;
     protected PlayerController playerController;
+    [SerializeField] protected InfoTabsScript infoTab;
     [SerializeField] protected PathfindingScript pathfindingScript;
     //Movement
     [SerializeField] protected int x, y;
@@ -28,6 +29,8 @@ public abstract class EntityController : MonoBehaviour {
     protected bool isAlive;
     [SerializeField] protected int viewingDistance;
 
+    [SerializeField] private WeoponObeject weopon;
+
     //abstracts
     public abstract void Movement();
     public abstract void Attack();
@@ -36,9 +39,12 @@ public abstract class EntityController : MonoBehaviour {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+
     }
 
     private void Start() {
+        infoTab = gameController.infoTab;
         isAlive = true;
         hasMovedThisTurn = false;
         health = maxHealth;
@@ -74,18 +80,6 @@ public abstract class EntityController : MonoBehaviour {
         }
     }
 
-
-    //WIP
-    protected List<Vector2Int> ViewableTiles() {
-
-        for (int i = 0; i < viewingDistance; i++) {
-
-        }
-
-        return null;
-    }
-
-
     public void SetHasMovedThisTurn(bool b) {
         hasMovedThisTurn = b;
     }
@@ -103,6 +97,7 @@ public abstract class EntityController : MonoBehaviour {
     }
 
     public int GetHealth() {
+        //Debug.Log("Leben abgerufen");
         return health;
     }
 
@@ -111,23 +106,39 @@ public abstract class EntityController : MonoBehaviour {
     }
 
     public int GetAttackDamage() {
+        if (weopon != null) {
+            Debug.Log("Schaden mit Waffe abgerufen");
+            return attackDamage + getEntityWeopon().baseDamage;
+        }
+        Debug.Log("No Weopon set");
         return attackDamage;
     }
 
     public int GetMaxHealth() {
+        // Debug.Log("Max Health abgerufen");
         return maxHealth;
     }
 
     public string GetEntityName() {
+        //Debug.Log("Name abgerufen");
         return entityName;
     }
 
     public EntityStatus getStatus() {
+        //Debug.Log("Status abgerufen");
         return status;
     }
 
     public int GetViewingDistance() {
         return viewingDistance;
+    }
+
+    public void setPlayerWeopon(WeoponObeject weopon) {
+        this.weopon = weopon;
+    }
+
+    public WeoponObeject getEntityWeopon() {
+        return weopon;
     }
 
 }

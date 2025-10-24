@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-
-using NUnit.Framework.Constraints;
 
 using Scripts;
 
@@ -9,11 +6,12 @@ using UnityEngine;
 
 public class EnemyController : EntityController {
 
-
+    [SerializeField] private List<ItemObject> itemDrops = new List<ItemObject>();
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        infoTab = gameController.infoTab;
     }
 
     private void Start() {
@@ -25,11 +23,19 @@ public class EnemyController : EntityController {
 
     private void Update() {
         if (health <= 0) {
+            DropItemOnTileWhenDead(x, y);
+
             gameController.SetTile(x, y, 0);
             isAlive = false;
             status = EntityStatus.Dead;
             gameObject.SetActive(false);
         }
+    }
+
+    private void DropItemOnTileWhenDead(int _x, int _y) {
+        //for now only drops the first item in list
+        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
+        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
     }
 
     override public void Movement() {
@@ -56,10 +62,18 @@ public class EnemyController : EntityController {
             hasMovedThisTurn = true;
         }
     }
+
+    public ItemObject dropItem() {
+        if (itemDrops.Count != 0) {
+            return itemDrops[Random.Range(0, itemDrops.Count)];
+        }
+        return null;
+    }
+
     override public void Attack() {
         if (health > 0 && getStatus() == EntityStatus.Hostile) {
             playerController.AdjustHealth(-attackDamage);
-            gameController.SendMessageToLog(GetEntityName() + " attacked Player for: " + GetAttackDamage());
+            infoTab.HitLogMessage(this, playerController);
         }
     }
 }

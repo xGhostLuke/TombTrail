@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9926331bda4e69b4c8b68b69cb03d251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoTab: {fileID: 0}
   pathfindingScript: {fileID: 0}
   x: 15
   y: 15
@@ -110,3 +111,4 @@ MonoBehaviour:
   entityName: Bat
   status: 1
   viewingDistance: 0
+  weopon: {fileID: 11400000, guid: a5b118921159737409fce1551e68b9cc, type: 2}
