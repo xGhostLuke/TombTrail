@@ -36,4 +36,12 @@ public class Tiles {
     public List<ItemObject> getItemList() {
         return itemsOnTile;
     }
+
+    /// <summary>
+    /// Method to remove a certain item from the Item list of the tile
+    /// </summary>
+    /// <param name="item">item to remove</param>
+    public void RemoveItemFromList(ItemObject item) {
+        itemsOnTile.Remove(item);
+    }
 }
