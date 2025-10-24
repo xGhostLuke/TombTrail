@@ -367,21 +367,18 @@ public class GameController : MonoBehaviour {
     //TODO!
     private void ShowWeoponList() {
         itemsOnTile.SetActive(true);
-        ReloadWeoponListElements();
+        ReloadItemListElements();
     }
 
     private void HideWeoponList() {
         itemsOnTile.SetActive(false);
-        ReloadWeoponListElements();
+        ReloadItemListElements();
     }
 
     /// <summary>
     /// Creates a new GameOject for every Item in the current ItemList
-    /// which displays the currentItemList 
-    /// TODO: Player should be able to interact with this List ex. with Buttons to pick up the items 
-    /// item list has to be updated accordingly then.
     /// </summary>
-    private void ReloadWeoponListElements() {
+    private void ReloadItemListElements() {
         if (currentItemList == null) {
             return;
         }
@@ -394,15 +391,15 @@ public class GameController : MonoBehaviour {
                         itemsOnTile.transform.rotation,
                         itemsOnTile.transform
                         );
-            xOffSet += spacing; //magicNumber
+            xOffSet += spacing;
             newItemListElem.GetComponent<Image>().sprite = item.ItemSprite;
-            newItemListElem.GetComponent<ItemListElementScript>().SetItemObject(item);
+            newItemListElem.GetComponent<ItemListElementScript>().SetItemObject(( WeoponObeject ) item);
         }
     }
 
 
     /// <summary>
-    /// Distroys all Children of a parent
+    /// Destroys all Children of a parent
     /// </summary>
     /// <param name="parent">parent with children</param>
     private void DeleteAllChildrenOfParent(GameObject parent) {
@@ -411,6 +408,12 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Returns a String of an Itemlist
+    /// Items are spaced by || 
+    /// </summary>
+    /// <param name="items"> an Itemlist</param>
+    /// <returns>String containing names off all items</returns>
     private string ItemListToString(List<ItemObject> items) {
         string output = "";
         foreach (ItemObject item in items) {
@@ -419,7 +422,22 @@ public class GameController : MonoBehaviour {
         return output;
     }
 
+    /// <summary>
+    /// Sets the player Weopon 
+    /// </summary>
+    /// <param name="weopon">Weopon to set as the playerWeopon</param>
     public void setPlayerWeopon(WeoponObeject weopon) {
         playerController.setPlayerWeopon(weopon);
+    }
+
+    /// <summary>
+    /// Removes a certain Item from a certain Tile
+    /// </summary>
+    /// <param name="xPos">xPos of the tile</param>
+    /// <param name="yPos">yPos of the tile</param>
+    /// <param name="item">item to remove</param>
+    public void removeItemFromTile(int xPos, int yPos, ItemObject item) {
+        GetTile(xPos, yPos).RemoveItemFromList(item);
+        ReloadItemListElements();
     }
 }

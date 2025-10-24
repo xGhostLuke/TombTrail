@@ -32,10 +32,17 @@ public class EnemyController : EntityController {
         }
     }
 
+    /// <summary>
+    /// Drops an Item to a certain Tile 
+    /// if the enemy has atleast one item that can drop
+    /// </summary>
+    /// <param name="_x">xPos of the tile</param>
+    /// <param name="_y">yPos of the tile</param>
     private void DropItemOnTileWhenDead(int _x, int _y) {
-        //for now only drops the first item in list
-        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
-        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
+        ItemObject itemToDrop = getRandomItemFromList();
+        if (itemToDrop != null) {
+            gameController.GetTile(_x, _y).addItemToItemList(itemToDrop);
+        }
     }
 
     override public void Movement() {
@@ -63,7 +70,11 @@ public class EnemyController : EntityController {
         }
     }
 
-    public ItemObject dropItem() {
+    /// <summary>
+    /// Selects one Random item from the item list 
+    /// </summary>
+    /// <returns></returns>
+    public ItemObject getRandomItemFromList() {
         if (itemDrops.Count != 0) {
             return itemDrops[Random.Range(0, itemDrops.Count)];
         }
