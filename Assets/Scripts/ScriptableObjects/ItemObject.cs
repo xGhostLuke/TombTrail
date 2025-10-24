@@ -5,5 +5,6 @@ using Scripts;
 public class ItemObject : ScriptableObject {
     ItemType type;
     public Sprite ItemSprite;
+    //for testing jira 
 
 }
