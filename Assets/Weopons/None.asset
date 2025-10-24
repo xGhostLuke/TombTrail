@@ -18,4 +18,4 @@ MonoBehaviour:
   actionCost: 0
   effect: 0
   ChanceForEffekt: 0
-  weoponSprite: {fileID: 0}
+  weoponSprite: {fileID: -8396422866197610597, guid: 3ea247bd937863142ac4a5dde19c16c9, type: 3}

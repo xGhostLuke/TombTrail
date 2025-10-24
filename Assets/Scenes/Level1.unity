@@ -12897,6 +12897,10 @@ PrefabInstance:
       propertyPath: weopon
       value: 
       objectReference: {fileID: 11400000, guid: a5b118921159737409fce1551e68b9cc, type: 2}
+    - target: {fileID: 3161240971154643306, guid: 9295121ddfac80c4d9e014a406280679, type: 3}
+      propertyPath: infoTab
+      value: 
+      objectReference: {fileID: 1841956870}
     - target: {fileID: 3974789935297179498, guid: 9295121ddfac80c4d9e014a406280679, type: 3}
       propertyPath: m_Name
       value: TrainingDummie
