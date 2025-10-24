@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bd108b957c33c54aad6e614b4f8adb3, type: 3}
   m_Name: WeakPotion
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 0}
-  healingEffect: 0
+  ItemSprite: {fileID: -7185650764507411536, guid: d97b5bbd27a1c4f41beb1a4799ef9ce7, type: 3}
+  healingEffect: 10

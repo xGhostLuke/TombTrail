@@ -1,16 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-
-using JetBrains.Annotations;
-
-using NUnit.Framework;
 
 using Scripts;
-
-using Unity.Mathematics;
-using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,6 +33,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private GameObject itemsOnTile;
     private List<ItemObject> currentItemList = new List<ItemObject>();
     [SerializeField] private GameObject itemListElement;
+    private GameObject currentPlayerWeoponDisplay;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -52,6 +44,7 @@ public class GameController : MonoBehaviour {
         entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         itemsOnTile = GameObject.FindGameObjectWithTag("ItemsOnTile");
+        currentPlayerWeoponDisplay = GameObject.FindGameObjectWithTag("CurrentPlayerWeoponDisplay");
 
 
         infoTab = GetComponent<InfoTabsScript>();
@@ -423,11 +416,13 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets the player Weopon 
+    /// Sets the player Weopon and load shows the current weopon sprite in the bottom left 
     /// </summary>
     /// <param name="weopon">Weopon to set as the playerWeopon</param>
     public void setPlayerWeopon(WeoponObeject weopon) {
         playerController.setPlayerWeopon(weopon);
+        currentPlayerWeoponDisplay.GetComponent<Image>().color = Color.white;
+        currentPlayerWeoponDisplay.GetComponent<Image>().sprite = weopon.ItemSprite;
     }
 
     /// <summary>
