@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 303280371}
   m_Layer: 5
   m_Name: CurrentWeopon
-  m_TagString: Untagged
+  m_TagString: CurrentPlayerWeoponDisplay
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -557,14 +557,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4156863, g: 0.20784315, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3004041070348012063, guid: 61a22945bb9daf846bc3d67c5cca516d, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6652,7 +6652,7 @@ Tilemap:
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -23, y: -15, z: 0}
-  m_Size: {x: 48, y: 28, z: 1}
+  m_Size: {x: 48, y: 30, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -8109,10 +8109,14 @@ PrefabInstance:
       objectReference: {fileID: 1767704674}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: itemDrops.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: 'itemDrops.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 02fe19edd35df84438ced8409f457bbc, type: 2}
+    - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
+      propertyPath: 'itemDrops.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: f5f95f79f675d2f42a24a1dddc3af100, type: 2}
     m_RemovedComponents: []
