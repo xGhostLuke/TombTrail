@@ -1,13 +1,21 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using NUnit.Framework;
 
 using Scripts;
 
+using Unity.Mathematics;
 using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -31,6 +39,9 @@ public class GameController : MonoBehaviour {
     public InfoTabsScript infoTab;
 
     [SerializeField] private EntityInfoTabScript entityInfoTabScript;
+    [SerializeField] private GameObject itemsOnTile;
+    private List<ItemObject> currentItemList = new List<ItemObject>();
+    [SerializeField] private GameObject itemListElement;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -40,6 +51,7 @@ public class GameController : MonoBehaviour {
         tileHighlighter = GameObject.FindGameObjectWithTag("TileHighlighter");
         entityInfoTabScript = GameObject.FindGameObjectWithTag("EnemyInfoTab").GetComponent<EntityInfoTabScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        itemsOnTile = GameObject.FindGameObjectWithTag("ItemsOnTile");
 
 
         infoTab = GetComponent<InfoTabsScript>();
@@ -122,6 +134,13 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    public Tiles GetTile(int x, int y) {
+        if (!IsValidTile(x, y)) {
+            return null;
+        }
+        return tilesArray[x, y];
+    }
+
     /// <summary>
     /// Checks if a Tile exists on the given Cords
     /// </summary>
@@ -194,8 +213,8 @@ public class GameController : MonoBehaviour {
         ResetHasMovedThisTurn();
 
         Vector2Int playerPos = LocatePlayer();
-        List<ItemObject> itemList = ItemOnCurrentPlayerTile(playerPos.x, playerPos.y);
-        if (itemList != null) {
+        ReloadItemOnTileList(playerPos.x, playerPos.y);
+        if (currentItemList != null) {
 
         }
 
@@ -318,30 +337,84 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Checks if the Player is standing on an Tile with Items 
+    /// Get the Items on a certain Tile
     /// </summary>
-    /// <param name="xPos"></param>
-    /// <param name="yPos"></param>
-    /// <returns>Boolean if yes or no</returns>
-    private List<ItemObject> ItemOnCurrentPlayerTile(int xPos, int yPos) {
-        List<ItemObject> items = tilesArray[xPos, yPos].getItemList();
+    /// <param name="xPos">xPos of the Tile to check</param>
+    /// <param name="yPos">yPos of the Tile to check</param>
+    /// <returns>List with Items on Tile if the isnt empty</returns>
+    private List<ItemObject> ItemOnTileInLog(int xPos, int yPos) {
 
-        if (items.Count == 0) {
+        if (currentItemList.Count == 0) {
             HideWeoponList();
+            Debug.Log("No Items on Tile " + xPos + "<||>" + yPos);
             return null;
         }
-        Debug.Log(items.ToString());
+        Debug.Log("Items on Tile " + xPos + "<||>" + yPos + ": " + ItemListToString(currentItemList));
         ShowWeoponList();
-        return items;
+        return currentItemList;
+    }
+
+    /// <summary>
+    /// Gets the current ItemList of a Tile
+    /// </summary>
+    /// <param name="xPos">xPos of the Tile</param>
+    /// <param name="yPos">yPos of the Tile</param>
+    private void ReloadItemOnTileList(int xPos, int yPos) {
+        currentItemList = tilesArray[xPos, yPos].getItemList();
+        ItemOnTileInLog(xPos, yPos);
     }
 
     //TODO!
-
     private void ShowWeoponList() {
-
+        itemsOnTile.SetActive(true);
+        ReloadWeoponListElements();
     }
 
     private void HideWeoponList() {
+        itemsOnTile.SetActive(false);
+        ReloadWeoponListElements();
+    }
 
+    /// <summary>
+    /// Creates a new GameOject for every Item in the current ItemList
+    /// which displays the currentItemList 
+    /// TODO: Player should be able to interact with this List ex. with Buttons to pick up the items 
+    /// item list has to be updated accordingly then.
+    /// </summary>
+    private void ReloadWeoponListElements() {
+        if (currentItemList == null) {
+            return;
+        }
+        DeleteAllChildrenOfParent(itemsOnTile);
+        float xOffSet = 0;
+        float spacing = 50;
+        foreach (ItemObject item in currentItemList) {
+            GameObject newItemListElem = Instantiate(itemListElement,
+                        new Vector3(itemsOnTile.transform.position.x + xOffSet, itemsOnTile.transform.position.y),
+                        itemsOnTile.transform.rotation,
+                        itemsOnTile.transform
+                        );
+            xOffSet += spacing; //magicNumber
+            newItemListElem.GetComponent<Image>().sprite = item.ItemSprite;
+        }
+    }
+
+
+    /// <summary>
+    /// Distroys all Children of a parent
+    /// </summary>
+    /// <param name="parent">parent with children</param>
+    private void DeleteAllChildrenOfParent(GameObject parent) {
+        foreach (Transform child in parent.transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    private string ItemListToString(List<ItemObject> items) {
+        string output = "";
+        foreach (ItemObject item in items) {
+            output += item.name + " || ";
+        }
+        return output;
     }
 }

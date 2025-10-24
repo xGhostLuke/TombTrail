@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Scripts;
-
-using UnityEngine.Tilemaps;
 
 public class Tiles {
     private TileValue value { get; set; }

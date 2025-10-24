@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class EnemyController : EntityController {
 
-    private List<ItemObject> itemDrops = new List<ItemObject>();
+    [SerializeField] private List<ItemObject> itemDrops = new List<ItemObject>();
 
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -23,11 +23,19 @@ public class EnemyController : EntityController {
 
     private void Update() {
         if (health <= 0) {
+            DropItemOnTileWhenDead(x, y);
+
             gameController.SetTile(x, y, 0);
             isAlive = false;
             status = EntityStatus.Dead;
             gameObject.SetActive(false);
         }
+    }
+
+    private void DropItemOnTileWhenDead(int _x, int _y) {
+        //for now only drops the first item in list
+        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
+        gameController.GetTile(_x, _y).addItemToItemList(dropItem());
     }
 
     override public void Movement() {
@@ -56,7 +64,10 @@ public class EnemyController : EntityController {
     }
 
     public ItemObject dropItem() {
-        return itemDrops[Random.Range(0, itemDrops.Count)];
+        if (itemDrops.Count != 0) {
+            return itemDrops[Random.Range(0, itemDrops.Count)];
+        }
+        return null;
     }
 
     override public void Attack() {
