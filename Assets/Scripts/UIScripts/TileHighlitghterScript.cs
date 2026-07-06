@@ -21,6 +21,8 @@ public class TileHighlighter : MonoBehaviour {
         SnapToGrid();
     }
 
+
+
     private void SnapToGrid() {
         try {
             Vector2Int hoveredTile = gameController.GetTileHoveredByMouse();

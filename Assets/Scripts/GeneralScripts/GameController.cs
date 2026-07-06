@@ -416,7 +416,7 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets the player Weopon and load shows the current weopon sprite in the bottom left 
+    /// Sets the player Weopon and load shows the current weopon sprite in the bottom left
     /// </summary>
     /// <param name="weopon">Weopon to set as the playerWeopon</param>
     public void setPlayerWeopon(WeoponObeject weopon) {
