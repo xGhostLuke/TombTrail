@@ -1,14 +1,9 @@
 using System;
-using System.Linq.Expressions;
 
 using Scripts;
 
-using Unity.VisualScripting;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Scripting.APIUpdating;
-using UnityEngine.UIElements;
 
 public class PlayerController : EntityController {
 
@@ -19,10 +14,14 @@ public class PlayerController : EntityController {
         UpdatePosition(x, y);
         type = TileValue.Player;
         status = EntityStatus.Neutral;
+        isAlive = true;
+        if (health <= 0) {
+            health = maxHealth;
+        }
     }
 
     private void Update() {
-        if (gameController.IsMyTurn(1)) {
+        if (gameController.IsMyTurn(TurnOwner.Player)) {
             Movement();
         }
     }
@@ -36,4 +35,9 @@ public class PlayerController : EntityController {
     }
 
     override public void Attack() => throw new NotImplementedException(); //Managed over Gamecontroller, works for now, maybe rework in the future
+
+    protected override void Die() {
+        base.Die();
+        gameController.GameOver();
+    }
 }

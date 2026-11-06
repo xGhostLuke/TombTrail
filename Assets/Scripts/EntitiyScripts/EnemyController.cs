@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class EnemyController : EntityController {
 
+    [Tooltip("Weighted loot table with drop chance. Takes priority over Item Drops when set.")]
+    [SerializeField] private LootTable lootTable;
+
+    [Tooltip("Legacy fallback: one random item from this list drops on death if no Loot Table is set.")]
     [SerializeField] private List<ItemObject> itemDrops = new List<ItemObject>();
 
     private void Awake() {
@@ -19,30 +23,51 @@ public class EnemyController : EntityController {
         gameController.SetTile(x, y, type);
         UpdatePosition(x, y);
         isAlive = true;
-    }
-
-    private void Update() {
         if (health <= 0) {
-            DropItemOnTileWhenDead(x, y);
-
-            gameController.SetTile(x, y, 0);
-            isAlive = false;
-            status = EntityStatus.Dead;
-            gameObject.SetActive(false);
+            health = maxHealth;
         }
     }
 
     /// <summary>
-    /// Drops an Item to a certain Tile 
-    /// if the enemy has atleast one item that can drop
+    /// Runs once when health hits 0 (see EntityController.AdjustHealth).
+    /// Drops loot on the tile the enemy died on, then disables the object.
     /// </summary>
-    /// <param name="_x">xPos of the tile</param>
-    /// <param name="_y">yPos of the tile</param>
-    private void DropItemOnTileWhenDead(int _x, int _y) {
-        ItemObject itemToDrop = getRandomItemFromList();
-        if (itemToDrop != null) {
-            gameController.GetTile(_x, _y).addItemToItemList(itemToDrop);
+    protected override void Die() {
+        base.Die();
+        DropLootOnTile(x, y);
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Rolls the loot table (or the legacy item list) and puts the result on the tile.
+    /// </summary>
+    private void DropLootOnTile(int _x, int _y) {
+        Tiles tile = gameController.GetTile(_x, _y);
+        if (tile == null) {
+            return;
         }
+
+        foreach (ItemObject item in RollLoot()) {
+            tile.addItemToItemList(item);
+            infoTab.StandardLogMessage(entityName + " dropped " + item.name + ".");
+        }
+    }
+
+    /// <summary>
+    /// Returns the items this enemy drops right now.
+    /// Uses the LootTable if assigned, otherwise one random item from itemDrops.
+    /// </summary>
+    public List<ItemObject> RollLoot() {
+        if (lootTable != null) {
+            return lootTable.RollDrops();
+        }
+
+        List<ItemObject> drops = new List<ItemObject>();
+        ItemObject fallback = getRandomItemFromList();
+        if (fallback != null) {
+            drops.Add(fallback);
+        }
+        return drops;
     }
 
     override public void Movement() {
@@ -71,9 +96,8 @@ public class EnemyController : EntityController {
     }
 
     /// <summary>
-    /// Selects one Random item from the item list 
+    /// Selects one Random item from the legacy item list
     /// </summary>
-    /// <returns></returns>
     public ItemObject getRandomItemFromList() {
         if (itemDrops.Count != 0) {
             return itemDrops[Random.Range(0, itemDrops.Count)];
@@ -82,8 +106,8 @@ public class EnemyController : EntityController {
     }
 
     override public void Attack() {
-        if (health > 0 && getStatus() == EntityStatus.Hostile) {
-            playerController.AdjustHealth(-attackDamage);
+        if (isAlive && getStatus() == EntityStatus.Hostile) {
+            playerController.AdjustHealth(-GetAttackDamage());
             infoTab.HitLogMessage(this, playerController);
         }
     }

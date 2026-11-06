@@ -18,7 +18,12 @@ public class GameController : MonoBehaviour {
     public Tiles[,] tilesArray;
     private int mapSizeX;
     private int mapSizeY;
-    private int currentTurn;
+
+    //turn order
+    private TurnOwner currentTurnOwner;
+    private int roundNumber;
+    private bool isGameOver;
+    private GameOverWindowScript gameOverWindow;
     private Tilemap wallTilemap;
     private BoundsInt bounds;
     private Camera mainCam;
@@ -46,6 +51,11 @@ public class GameController : MonoBehaviour {
         itemsOnTile = GameObject.FindGameObjectWithTag("ItemsOnTile");
         currentPlayerWeoponDisplay = GameObject.FindGameObjectWithTag("CurrentPlayerWeoponDisplay");
 
+        // Optional: a window tagged "GameOverWindow". Without it the game still ends, just without UI.
+        GameObject gameOverObject = GameObject.FindGameObjectWithTag("GameOverWindow");
+        if (gameOverObject != null) {
+            gameOverWindow = gameOverObject.GetComponent<GameOverWindowScript>();
+        }
 
         infoTab = GetComponent<InfoTabsScript>();
 
@@ -55,7 +65,9 @@ public class GameController : MonoBehaviour {
         bounds = wallTilemap.cellBounds;
         mapSizeX = bounds.size.x;
         mapSizeY = bounds.size.y;
-        currentTurn = 1;
+        currentTurnOwner = TurnOwner.Player;
+        roundNumber = 1;
+        isGameOver = false;
         GetObstaclesFromGrid();
         PrintTilesArray();
 
@@ -189,54 +201,96 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Returns the boolean if current turn is Types Turn
+    /// True while <paramref name="owner"/> is allowed to act. Always false after game over.
     /// </summary>
-    /// <param name="type">MAGIC NUMBERS Type to Check </param>
-    /// <returns>Boolean</returns>
-    public bool IsMyTurn(int type) {
-        return type == 1 && currentTurn % 2 == 1 || type == 2 && currentTurn % 2 == 0;
+    public bool IsMyTurn(TurnOwner owner) {
+        return !isGameOver && currentTurnOwner == owner;
     }
 
+    public TurnOwner GetCurrentTurnOwner() {
+        return currentTurnOwner;
+    }
 
-    //This handles turn management and basic enemy logic for now
-    //Enemy logic should be moved to EnemyController in the future
-    //or maybe rename method to TurnLogic?
-    public void NextTurn() {
-        currentTurn++;
-        ResetHasMovedThisTurn();
+    /// <summary>
+    /// Number of the current round. One round = one player action + every enemy's reaction.
+    /// </summary>
+    public int GetRoundNumber() {
+        return roundNumber;
+    }
+
+    public bool IsGameOver() {
+        return isGameOver;
+    }
+
+    /// <summary>
+    /// Ends the player's action, lets every living enemy react, then starts the next round.
+    /// Called by the player's Move/Attack. Enemies never call this.
+    /// </summary>
+    public void EndPlayerTurn() {
+        if (isGameOver || currentTurnOwner != TurnOwner.Player) {
+            return;
+        }
 
         Vector2Int playerPos = LocatePlayer();
         ReloadItemOnTileList(playerPos.x, playerPos.y);
-        if (currentItemList != null) {
 
-        }
+        currentTurnOwner = TurnOwner.Enemies;
+        ResetHasMovedThisTurn();
+        RunEnemyTurn(playerPos);
+        infoTab.RefreshEnemyInfo(selectedEntity);
 
-        if (IsMyTurn(2)) {
-            infoTab.RefreshEnemyInfo(selectedEntity);
-            foreach (GameObject enemy in enemyList) {
-                EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (!controller.GetHasMovedThisTurn() && controller.GetIsAlive()) {
-
-                    int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
-
-                    if (distance == 1) {
-                        controller.Attack();
-                    } else {
-                        if (distance <= controller.GetViewingDistance()) {
-                            controller.Movement();
-                        }
-                    }
-                }
-            }
-            infoTab.RefreshEnemyInfo(selectedEntity);
-            NextTurn();
+        if (isGameOver) {
             return;
+        }
+        roundNumber++;
+        currentTurnOwner = TurnOwner.Player;
+    }
+
+    /// <summary>
+    /// Every living enemy either attacks (adjacent) or moves towards the player (in view).
+    /// Stops early once the player dies.
+    /// </summary>
+    private void RunEnemyTurn(Vector2Int playerPos) {
+        foreach (GameObject enemy in enemyList) {
+            if (isGameOver) {
+                return;
+            }
+            EnemyController controller = enemy.GetComponent<EnemyController>();
+            if (controller == null || controller.GetHasMovedThisTurn() || !controller.GetIsAlive()) {
+                continue;
+            }
+
+            int distance = GetDistanceToTile(playerPos.x, playerPos.y, controller.GetXY().x, controller.GetXY().y);
+            if (distance == 1) {
+                controller.Attack();
+            } else if (distance <= controller.GetViewingDistance()) {
+                controller.Movement();
+            }
+            controller.SetHasMovedThisTurn(true);
         }
     }
 
     private void ResetHasMovedThisTurn() {
         foreach (GameObject entity in enemyList) {
             entity.GetComponent<EntityController>().SetHasMovedThisTurn(false);
+        }
+    }
+
+    /// <summary>
+    /// Called by the PlayerController when the player dies. Blocks all further input
+    /// and shows the GameOverWindow if the scene has one.
+    /// </summary>
+    public void GameOver() {
+        if (isGameOver) {
+            return;
+        }
+        isGameOver = true;
+        string message = playerController.GetEntityName() + " died in round " + roundNumber + ". Game Over.";
+        infoTab.StandardLogMessage(message);
+        if (gameOverWindow != null) {
+            gameOverWindow.ShowGameOver(message);
+        } else {
+            Debug.Log(message + " (no object tagged GameOverWindow in scene)");
         }
     }
 
@@ -261,21 +315,34 @@ public class GameController : MonoBehaviour {
 
     private void PlayerAttack() { //This is here for now, should be in the PlayerController tho. Update idk maybe this should stay here
         int attackDistance = 1;
-        if (GetTileValue(GetTileHoveredByMouse().x, GetTileHoveredByMouse().y) == TileValue.Enemy && IsMyTurn(1) && Mouse.current.leftButton.wasPressedThisFrame) {
-            foreach (GameObject enemy in enemyList) {
-                EnemyController enemyController = enemy.GetComponent<EnemyController>();
-                Vector2Int playerPos = playerController.GetXY();
-                Vector2Int enemyPos = enemyController.GetXY();
-                if (enemyController.GetXY().x == GetTileHoveredByMouse().x && enemyController.GetXY().y == GetTileHoveredByMouse().y) {
-                    if (!( GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) <= attackDistance )) {
-                        break;
-                    }
-                    enemyController.AdjustHealth(-playerController.GetAttackDamage());
-                    infoTab.HitLogMessage(playerController, enemyController);
-                    infoTab.RefreshEnemyInfo(selectedEntity);
-                }
+        if (!IsMyTurn(TurnOwner.Player) || !Mouse.current.leftButton.wasPressedThisFrame) {
+            return;
+        }
+        Vector2Int hovered = GetTileHoveredByMouse();
+        if (GetTileValue(hovered.x, hovered.y) != TileValue.Enemy) {
+            return;
+        }
+
+        Vector2Int playerPos = playerController.GetXY();
+        foreach (GameObject enemy in enemyList) {
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            if (enemyController == null || !enemyController.GetIsAlive()) {
+                continue;
             }
-            NextTurn();
+            Vector2Int enemyPos = enemyController.GetXY();
+            if (enemyPos != hovered) {
+                continue;
+            }
+            if (GetDistanceToTile(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y) > attackDistance) {
+                return; // out of reach: no action, no turn spent
+            }
+
+            // log first so the message shows the damage dealt, then apply it (may kill the enemy)
+            infoTab.HitLogMessage(playerController, enemyController);
+            enemyController.AdjustHealth(-playerController.GetAttackDamage());
+            infoTab.RefreshEnemyInfo(selectedEntity);
+            EndPlayerTurn();
+            return;
         }
     }
 
