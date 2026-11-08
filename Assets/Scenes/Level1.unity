@@ -1008,6 +1008,7 @@ MonoBehaviour:
   xpToNextLevel: 100
   level: 1
   healthPerLevel: 10
+  carriedItem: {fileID: 0}
 --- !u!4 &344857301
 Transform:
   m_ObjectHideFlags: 0
@@ -7951,6 +7952,15 @@ MonoBehaviour:
   gameController: {fileID: 1841956867}
   x: 5
   y: 4
+  quest:
+    state: 0
+    requestedItem: {fileID: 11400000, guid: b1ec0d85cbeda7b4e8a59409e2fe588c, type: 2}
+    xpReward: 100
+    offerText: 'Villager: A bat stole my silver ring and fled south. Please bring
+      it back!'
+    reminderText: 'Villager: Please find my silver ring. The bat fled south.'
+    completedText: 'Villager: My ring! Thank you, you have earned this.'
+    afterText: 'Villager: Thank you again for the ring.'
 --- !u!4 &1161268596
 Transform:
   m_ObjectHideFlags: 0
