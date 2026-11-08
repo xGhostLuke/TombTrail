@@ -35,7 +35,7 @@ public abstract class EntityController : MonoBehaviour {
     public abstract void Movement();
     public abstract void Attack();
 
-    private void Awake() {
+    protected virtual void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -58,7 +58,12 @@ public abstract class EntityController : MonoBehaviour {
 
     protected void Move(int dx, int dy, TileValue type) {
         if (dx == 0 && dy == 0) {
-            gameController.NextTurn();
+            // Waiting counts as an action: the player skips, enemies just stay.
+            hasMovedThisTurn = true;
+            if (type == TileValue.Player) {
+                gameController.EndPlayerTurn();
+            }
+            return;
         }
 
         int newX = x + dx;
@@ -75,7 +80,7 @@ public abstract class EntityController : MonoBehaviour {
             //gameController.PrintTilesArray();
 
             if (type == TileValue.Player) {
-                gameController.NextTurn();
+                gameController.EndPlayerTurn();
             }
         }
     }
@@ -92,8 +97,31 @@ public abstract class EntityController : MonoBehaviour {
         return new Vector2Int(x, y);
     }
 
+    /// <summary>
+    /// Changes health by <paramref name="adjust"/> (negative = damage, positive = heal).
+    /// Health is clamped to [0, maxHealth]. Reaching 0 kills the entity exactly once.
+    /// </summary>
     public void AdjustHealth(int adjust) {
-        health += adjust;
+        if (!isAlive) {
+            return;
+        }
+        health = Mathf.Clamp(health + adjust, 0, maxHealth);
+        if (health <= 0) {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// Called once when health reaches 0. Frees the tile and marks the entity dead.
+    /// Subclasses extend this (drop loot, game over, ...).
+    /// </summary>
+    protected virtual void Die() {
+        isAlive = false;
+        status = EntityStatus.Dead;
+        gameController.SetTile(x, y, TileValue.Empty);
+        if (infoTab != null) {
+            infoTab.StandardLogMessage(entityName + " died!");
+        }
     }
 
     public int GetHealth() {
@@ -107,10 +135,8 @@ public abstract class EntityController : MonoBehaviour {
 
     public int GetAttackDamage() {
         if (weopon != null) {
-            Debug.Log("Schaden mit Waffe abgerufen");
             return attackDamage + getEntityWeopon().baseDamage;
         }
-        Debug.Log("No Weopon set");
         return attackDamage;
     }
 

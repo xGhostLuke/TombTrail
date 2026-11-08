@@ -15,6 +15,7 @@ TagManager:
   - Pathfinding
   - ItemsOnTile
   - CurrentPlayerWeoponDisplay
+  - GameOverWindow
   layers:
   - Default
   - TransparentFX

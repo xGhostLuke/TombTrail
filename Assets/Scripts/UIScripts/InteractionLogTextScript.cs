@@ -12,6 +12,8 @@ public class InteractionLogTextScript : WindowController {
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private GameObject interactionlogWindow;
     [SerializeField] private GameObject interactionlogButton;
+    [SerializeField] private int maxVisibleLines = 26;
+
     private void Awake() {
         logText = "";
         RefreshTextInUI();
@@ -22,6 +24,20 @@ public class InteractionLogTextScript : WindowController {
         logText = logText + "\n" + addText;
         CheckTextLength();
         RefreshTextInUI();
+        RemoveLinesBelowWindow();
+    }
+
+    /// <summary>
+    /// The window holds lines, not characters: long entries wrap, so without this
+    /// the newest text could end up below the window where nobody can read it.
+    /// </summary>
+    private void RemoveLinesBelowWindow() {
+        text.ForceMeshUpdate();
+        while (text.textInfo.lineCount > maxVisibleLines && logText.Contains("\n")) {
+            logText = logText.Substring(logText.IndexOf("\n") + 1);
+            RefreshTextInUI();
+            text.ForceMeshUpdate();
+        }
     }
 
     private void CheckTextLength() {
