@@ -50,7 +50,7 @@ public class EnemyController : EntityController {
         }
 
         foreach (ItemObject item in RollLoot()) {
-            tile.addItemToItemList(item);
+            gameController.AddItemToTile(_x, _y, item);
             infoTab.StandardLogMessage(entityName + " dropped " + item.name + ".");
         }
     }

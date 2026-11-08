@@ -38,6 +38,8 @@ public class GameController : MonoBehaviour {
     [SerializeField] private EntityInfoTabScript entityInfoTabScript;
     [SerializeField] private GameObject itemsOnTile;
     private List<ItemObject> currentItemList = new List<ItemObject>();
+    [SerializeField] private float groundItemSize = 0.7f;
+    private readonly Dictionary<Vector2Int, SpriteRenderer> groundItems = new Dictionary<Vector2Int, SpriteRenderer>();
     [SerializeField] private GameObject itemListElement;
     private GameObject currentPlayerWeoponDisplay;
     private Color emptyWeaponDisplayColor;
@@ -506,6 +508,49 @@ public class GameController : MonoBehaviour {
     public void removeItemFromTile(int xPos, int yPos, ItemObject item) {
         GetTile(xPos, yPos).RemoveItemFromList(item);
         ReloadItemListElements();
+        RefreshGroundItem(xPos, yPos);
+    }
+
+    /// <summary>
+    /// Puts an item on a tile and shows it on the map
+    /// </summary>
+    /// <param name="xPos">xPos of the tile</param>
+    /// <param name="yPos">yPos of the tile</param>
+    /// <param name="item">item to add</param>
+    public void AddItemToTile(int xPos, int yPos, ItemObject item) {
+        GetTile(xPos, yPos).addItemToItemList(item);
+        RefreshGroundItem(xPos, yPos);
+    }
+
+    /// <summary>
+    /// Shows the newest item of a tile on the map. One sprite per tile is enough,
+    /// the item list names the rest once the player stands there.
+    /// </summary>
+    private void RefreshGroundItem(int xPos, int yPos) {
+        Vector2Int tile = new Vector2Int(xPos, yPos);
+        if (groundItems.TryGetValue(tile, out SpriteRenderer oldMarker)) {
+            Destroy(oldMarker.gameObject);
+            groundItems.Remove(tile);
+        }
+        List<ItemObject> items = GetTile(xPos, yPos).getItemList();
+        if (items.Count > 0) {
+            groundItems[tile] = CreateGroundItem(tile, items[items.Count - 1]);
+        }
+    }
+
+    private SpriteRenderer CreateGroundItem(Vector2Int tile, ItemObject item) {
+        SpriteRenderer playerSprite = playerController.GetComponentInChildren<SpriteRenderer>();
+        SpriteRenderer marker = new GameObject("GroundItem").AddComponent<SpriteRenderer>();
+        marker.sprite = item.ItemSprite;
+        marker.sharedMaterial = playerSprite.sharedMaterial;
+        // On the entities' layer, so the fog hides it, but one step below so entities stand on top.
+        marker.sortingLayerID = playerSprite.sortingLayerID;
+        marker.sortingOrder = playerSprite.sortingOrder - 1;
+        marker.transform.position = TileToWorldCoordinate(tile.x, tile.y);
+        // Item sprites differ in size and pixels per unit, so each one gets fitted to the tile.
+        Vector3 size = item.ItemSprite.bounds.size;
+        marker.transform.localScale = Vector3.one * ( groundItemSize / Mathf.Max(size.x, size.y) );
+        return marker;
     }
 
     /// <summary>
@@ -531,7 +576,7 @@ public class GameController : MonoBehaviour {
             return;
         }
         Vector2Int playerPos = LocatePlayer();
-        GetTile(playerPos.x, playerPos.y).addItemToItemList(entry.Item);
+        AddItemToTile(playerPos.x, playerPos.y, entry.Item);
         ReloadItemOnTileList(playerPos.x, playerPos.y);
         infoTab.StandardLogMessage("You drop " + entry.Item.name + ".");
     }
