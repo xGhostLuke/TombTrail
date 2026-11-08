@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour {
     private List<ItemObject> currentItemList = new List<ItemObject>();
     [SerializeField] private GameObject itemListElement;
     private GameObject currentPlayerWeoponDisplay;
+    private Color emptyWeaponDisplayColor;
 
     private void Awake() {  // <=== Awake gets called before start()
         mainCam = Camera.main;
@@ -51,6 +52,7 @@ public class GameController : MonoBehaviour {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         itemsOnTile = GameObject.FindGameObjectWithTag("ItemsOnTile");
         currentPlayerWeoponDisplay = GameObject.FindGameObjectWithTag("CurrentPlayerWeoponDisplay");
+        emptyWeaponDisplayColor = currentPlayerWeoponDisplay.GetComponent<Image>().color;
 
         // Optional: a window tagged "GameOverWindow". Without it the game still ends, just without UI.
         GameObject gameOverObject = GameObject.FindGameObjectWithTag("GameOverWindow");
@@ -487,11 +489,12 @@ public class GameController : MonoBehaviour {
     /// <summary>
     /// Sets the player Weopon and load shows the current weopon sprite in the bottom left
     /// </summary>
-    /// <param name="weopon">Weopon to set as the playerWeopon</param>
+    /// <param name="weopon">Weopon to set as the playerWeopon, null for empty hands</param>
     public void setPlayerWeopon(WeoponObeject weopon) {
         playerController.setPlayerWeopon(weopon);
-        currentPlayerWeoponDisplay.GetComponent<Image>().color = Color.white;
-        currentPlayerWeoponDisplay.GetComponent<Image>().sprite = weopon.ItemSprite;
+        Image display = currentPlayerWeoponDisplay.GetComponent<Image>();
+        display.color = weopon != null ? Color.white : emptyWeaponDisplayColor;
+        display.sprite = weopon != null ? weopon.ItemSprite : null;
     }
 
     /// <summary>

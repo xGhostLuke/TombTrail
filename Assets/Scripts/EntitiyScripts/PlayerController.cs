@@ -109,6 +109,23 @@ public class PlayerController : EntityController {
         gameController.EndPlayerTurn();
     }
 
+    /// <summary>
+    /// Puts the equipped weapon back into the pack. Bound to the weapon display in the scene.
+    /// </summary>
+    public void UnequipWeapon() {
+        WeoponObeject weapon = getEntityWeopon();
+        if (weapon == null || !gameController.IsMyTurn(TurnOwner.Player)) {
+            return;
+        }
+        if (!inventory.TryAdd(weapon)) {
+            infoTab.StandardLogMessage("No room for " + weapon.name + " in your pack.");
+            return;
+        }
+        gameController.setPlayerWeopon(null);
+        infoTab.StandardLogMessage("You put away " + weapon.name + ".");
+        gameController.EndPlayerTurn();
+    }
+
     public void AddXp(int amount) {
         xp += amount;
         infoTab.StandardLogMessage("Gained " + amount + " XP (" + xp + "/" + xpToNextLevel + ").");
