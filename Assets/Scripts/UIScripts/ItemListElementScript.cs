@@ -28,6 +28,10 @@ public class ItemListElementScript : MonoBehaviour {
                 gameController.removeItemFromTile(playerPos.x, playerPos.y, weoponObeject);
                 break;
             case HealingObject healingObject:
+                PlayerController player = gameController.playerController;
+                if (player.GetHealth() >= player.GetMaxHealth()) {
+                    break; // Nothing to heal: the potion stays on the tile until the inventory replaces this.
+                }
                 gameController.AdjustPlayerHealth(healingObject.GetHealingEffect());
                 gameController.removeItemFromTile(playerPos.x, playerPos.y, healingObject);
                 break;
