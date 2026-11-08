@@ -14,7 +14,7 @@ public class Quest {
     public QuestItemObject requestedItem;
     public int xpReward = 100;
 
-    // Short texts: the interaction log holds about 764 characters.
+    // Short texts: the interaction log shows at most 26 lines.
     [TextArea] public string offerText;
     [TextArea] public string reminderText;
     [TextArea] public string completedText;
