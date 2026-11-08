@@ -4,6 +4,7 @@ namespace Scripts {
         Player = 1,
         Enemy = 2,
         Item = 3,
-        Obstacle = 4
+        Obstacle = 4,
+        Npc = 5
     }
 }
