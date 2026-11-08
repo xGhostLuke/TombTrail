@@ -351,7 +351,8 @@ public class GameController : MonoBehaviour {
             //This is prob. very consuming but works for now. Should be reworked in the future 
             foreach (GameObject enemy in enemyList) {
                 EnemyController controller = enemy.GetComponent<EnemyController>();
-                if (controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
+                // A dead enemy keeps its coordinates, so without this check it could hide a living one on the same tile.
+                if (controller.GetIsAlive() && controller.GetXY().x == GetTileHoveredByMouse().x && controller.GetXY().y == GetTileHoveredByMouse().y) {
 
                     entityInfoTabScript.ShowWindow(
                         controller.GetEntityName(),
