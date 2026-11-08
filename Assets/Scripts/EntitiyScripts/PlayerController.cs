@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : EntityController {
     [SerializeField] private int xp;
     [SerializeField] private int xpToNextLevel = 100;
+    [SerializeField] private int level = 1;
+    [SerializeField] private int healthPerLevel = 10;
 
     private void Start() {
         // REMINDER: x and y needs to be adjusted if the Grid got changed by a lot
@@ -54,5 +56,20 @@ public class PlayerController : EntityController {
     public void AddXp(int amount) {
         xp += amount;
         infoTab.StandardLogMessage("Gained " + amount + " XP (" + xp + "/" + xpToNextLevel + ").");
+        // The > 0 check stops an endless loop if the threshold is set to 0 in the Inspector.
+        while (xpToNextLevel > 0 && xp >= xpToNextLevel) {
+            LevelUp();
+        }
+    }
+
+    private void LevelUp() {
+        xp -= xpToNextLevel;
+        xpToNextLevel *= 2;
+        level++;
+        // Raise the cap before healing, otherwise the clamp in AdjustHealth cuts the heal off.
+        maxHealth += healthPerLevel;
+        AdjustHealth(maxHealth);
+        infoTab.StandardLogMessage("Level up! You are now level " + level + ", max health " + maxHealth + ".");
+        infoTab.ShowInteractionlog();
     }
 }
