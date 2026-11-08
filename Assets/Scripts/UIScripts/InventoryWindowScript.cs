@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -129,13 +131,45 @@ public class InventoryWindowScript : WindowController {
         icon.sprite = entry.Item.ItemSprite;
         icon.preserveAspect = true;
         icon.raycastTarget = false;
-        icon.rectTransform.anchorMin = Vector2.zero;
-        icon.rectTransform.anchorMax = Vector2.one;
-        icon.rectTransform.offsetMin = Vector2.zero;
-        icon.rectTransform.offsetMax = Vector2.zero;
+        Stretch(icon.rectTransform);
+        if (entry.Count > 1) {
+            AddCountLabel(background.rectTransform, entry);
+        }
 
         background.gameObject.AddComponent<InventoryItemView>().Setup(this, entry);
         return background.gameObject;
+    }
+
+    private void AddCountLabel(RectTransform parent, InventoryEntry entry) {
+        // A dark patch keeps the number readable on any sprite.
+        Image backdrop = CreateImage("Count", parent);
+        backdrop.color = new Color(0f, 0f, 0f, 0.8f);
+        backdrop.raycastTarget = false;
+        backdrop.rectTransform.anchorMin = new Vector2(1f, 0f);
+        backdrop.rectTransform.anchorMax = new Vector2(1f, 0f);
+        backdrop.rectTransform.pivot = new Vector2(1f, 0f);
+        backdrop.rectTransform.anchoredPosition = Vector2.zero;
+        backdrop.rectTransform.sizeDelta = Vector2.one * cellSize * 0.42f;
+        // Children turn with a turned item, but the number should stay upright.
+        backdrop.rectTransform.localRotation = Quaternion.Inverse(RotationOf(entry.Rotated));
+
+        var labelObject = new GameObject("Number", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        labelObject.layer = parent.gameObject.layer;
+        labelObject.transform.SetParent(backdrop.rectTransform, false);
+        TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
+        label.text = entry.Count.ToString();
+        label.fontSize = cellSize * 0.36f;
+        label.fontStyle = FontStyles.Bold;
+        label.alignment = TextAlignmentOptions.Center;
+        label.raycastTarget = false;
+        Stretch(label.rectTransform);
+    }
+
+    private static void Stretch(RectTransform rect) {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
     }
 
     private Image CreateImage(string objectName, Transform parent) {

@@ -7,4 +7,5 @@ public class ItemObject : ScriptableObject {
     public Sprite ItemSprite;
     [Min(1)] public int GridWidth = 1;
     [Min(1)] public int GridHeight = 1;
+    [Min(1)] public int MaxStack = 1;
 }

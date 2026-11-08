@@ -91,7 +91,7 @@ public class PlayerController : EntityController {
             infoTab.StandardLogMessage("You are already at full health.");
             return;
         }
-        inventory.Remove(entry);
+        inventory.RemoveOne(entry);
         AdjustHealth(potion.GetHealingEffect());
         infoTab.StandardLogMessage("You drink " + potion.name + ".");
         gameController.EndPlayerTurn();
@@ -99,7 +99,7 @@ public class PlayerController : EntityController {
 
     private void EquipWeapon(InventoryEntry entry, WeoponObeject weapon) {
         WeoponObeject previous = getEntityWeopon();
-        bool swapped = previous == null ? inventory.Remove(entry) : inventory.TryReplace(entry, previous);
+        bool swapped = previous == null ? inventory.RemoveOne(entry) : inventory.TryReplace(entry, previous);
         if (!swapped) {
             infoTab.StandardLogMessage("No room for " + previous.name + " in your pack.");
             return;

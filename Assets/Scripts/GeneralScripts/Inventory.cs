@@ -11,6 +11,7 @@ public class InventoryEntry {
     public int X { get; private set; }
     public int Y { get; private set; }
     public bool Rotated { get; private set; }
+    public int Count { get; private set; } = 1;
 
     public Vector2Int Size => Inventory.SizeOf(Item, Rotated);
 
@@ -23,6 +24,14 @@ public class InventoryEntry {
         X = x;
         Y = y;
         Rotated = rotated;
+    }
+
+    public void AddOne() {
+        Count++;
+    }
+
+    public void RemoveOne() {
+        Count--;
     }
 }
 
@@ -73,14 +82,19 @@ public class Inventory {
     }
 
     /// <summary>
-    /// Puts the item on the first free spot, upright if possible, otherwise turned.
+    /// Adds the item to a stack that still has room, otherwise puts it on the first
+    /// free spot, upright if possible, otherwise turned.
     /// </summary>
     /// <returns>False if there is no room anywhere</returns>
     public bool TryAdd(ItemObject item) {
-        if (!TryFindSpot(item, out InventoryEntry placed)) {
+        InventoryEntry stack = entries.Find(entry => entry.Item == item && entry.Count < item.MaxStack);
+        if (stack != null) {
+            stack.AddOne();
+        } else if (TryFindSpot(item, out InventoryEntry placed)) {
+            entries.Add(placed);
+        } else {
             return false;
         }
-        entries.Add(placed);
         Changed?.Invoke();
         return true;
     }
@@ -99,23 +113,39 @@ public class Inventory {
     }
 
     /// <summary>
-    /// Swaps an entry for another item, which may have a different size.
+    /// Swaps one item of an entry for another item, which may have a different size.
     /// </summary>
     /// <returns>False if the other item does not fit; the entry then stays untouched</returns>
     public bool TryReplace(InventoryEntry entry, ItemObject replacement) {
-        entries.Remove(entry);
+        // Only the last item of a stack frees its cells.
+        bool freesCells = entry.Count == 1;
+        if (freesCells) {
+            entries.Remove(entry);
+        }
         if (!TryFindSpot(replacement, out InventoryEntry placed)) {
-            entries.Add(entry);
+            if (freesCells) {
+                entries.Add(entry);
+            }
             return false;
+        }
+        if (!freesCells) {
+            entry.RemoveOne();
         }
         entries.Add(placed);
         Changed?.Invoke();
         return true;
     }
 
-    public bool Remove(InventoryEntry entry) {
-        if (!entries.Remove(entry)) {
+    /// <summary>
+    /// Takes one item out of an entry. The entry disappears with its last item.
+    /// </summary>
+    public bool RemoveOne(InventoryEntry entry) {
+        if (!entries.Contains(entry)) {
             return false;
+        }
+        entry.RemoveOne();
+        if (entry.Count == 0) {
+            entries.Remove(entry);
         }
         Changed?.Invoke();
         return true;

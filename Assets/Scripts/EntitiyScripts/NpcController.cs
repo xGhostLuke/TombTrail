@@ -53,7 +53,7 @@ public class NpcController : MonoBehaviour {
             Say(quest.reminderText);
             return;
         }
-        player.GetInventory().Remove(entry);
+        player.GetInventory().RemoveOne(entry);
         quest.state = QuestState.Done;
         Say(quest.completedText);
         player.AddXp(quest.xpReward);

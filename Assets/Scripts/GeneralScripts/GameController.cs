@@ -524,7 +524,7 @@ public class GameController : MonoBehaviour {
     /// </summary>
     /// <param name="entry">entry of the player's pack</param>
     public void DropItem(InventoryEntry entry) {
-        if (isGameOver || !playerController.GetInventory().Remove(entry)) {
+        if (isGameOver || !playerController.GetInventory().RemoveOne(entry)) {
             return;
         }
         Vector2Int playerPos = LocatePlayer();
