@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
   ItemSprite: {fileID: -3004041070348012063, guid: 61a22945bb9daf846bc3d67c5cca516d, type: 3}
+  GridWidth: 1
+  GridHeight: 3
   weoponName: Broken Sword
   baseDamage: 10
   range: 1

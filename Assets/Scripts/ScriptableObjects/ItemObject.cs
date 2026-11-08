@@ -5,4 +5,6 @@ using Scripts;
 public class ItemObject : ScriptableObject {
     ItemType type;
     public Sprite ItemSprite;
+    [Min(1)] public int GridWidth = 1;
+    [Min(1)] public int GridHeight = 1;
 }
