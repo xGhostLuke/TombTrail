@@ -6,11 +6,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : EntityController {
+    [SerializeField] private int xp;
+    [SerializeField] private int xpToNextLevel = 100;
+
     private void Start() {
         // REMINDER: x and y needs to be adjusted if the Grid got changed by a lot
         // (idk how to fix this) -> TODO: später über GameController/LevelConfig lösen
 
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        infoTab = gameController.infoTab;
         gameController.SetTile(x, y, TileValue.Player);
 
         UpdatePosition(x, y);
@@ -45,5 +49,10 @@ public class PlayerController : EntityController {
     protected override void Die() {
         base.Die();
         gameController.GameOver();
+    }
+
+    public void AddXp(int amount) {
+        xp += amount;
+        infoTab.StandardLogMessage("Gained " + amount + " XP (" + xp + "/" + xpToNextLevel + ").");
     }
 }

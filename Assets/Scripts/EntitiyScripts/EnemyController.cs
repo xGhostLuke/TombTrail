@@ -12,6 +12,8 @@ public class EnemyController : EntityController {
     [Tooltip("Legacy fallback: one random item from this list drops on death if no Loot Table is set.")]
     [SerializeField] private List<ItemObject> itemDrops = new List<ItemObject>();
 
+    [SerializeField] private int xpReward = 5;
+
     private void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -35,6 +37,7 @@ public class EnemyController : EntityController {
     protected override void Die() {
         base.Die();
         DropLootOnTile(x, y);
+        playerController.AddXp(xpReward);
         gameObject.SetActive(false);
     }
 
