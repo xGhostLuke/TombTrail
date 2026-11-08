@@ -110,5 +110,5 @@ MonoBehaviour:
   attackDamage: 10
   entityName: Bat
   status: 1
-  viewingDistance: 0
+  viewingDistance: 10
   weopon: {fileID: 11400000, guid: a5b118921159737409fce1551e68b9cc, type: 2}
