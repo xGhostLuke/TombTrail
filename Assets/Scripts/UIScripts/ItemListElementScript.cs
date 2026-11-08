@@ -17,6 +17,10 @@ public class ItemListElementScript : MonoBehaviour {
     /// Prints out a Log message if the item is from an unknown type
     /// </summary>
     public void PressedOnListElement() {
+        if (gameController.IsGameOver()) {
+            return;
+        }
+
         Vector2Int playerPos = gameController.LocatePlayer();
         switch (GetItem()) {
             case WeoponObeject weoponObeject:
