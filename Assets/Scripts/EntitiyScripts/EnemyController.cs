@@ -107,8 +107,9 @@ public class EnemyController : EntityController {
 
     override public void Attack() {
         if (isAlive && getStatus() == EntityStatus.Hostile) {
-            playerController.AdjustHealth(-GetAttackDamage());
+            // Log first: this hit may kill the player, and the Game Over line has to come after it.
             infoTab.HitLogMessage(this, playerController);
+            playerController.AdjustHealth(-GetAttackDamage());
         }
     }
 }
