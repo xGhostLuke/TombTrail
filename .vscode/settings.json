@@ -60,17 +60,17 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
-        "*.sln": "*.csproj",
+        "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "Tomb Trail.sln",
+    "dotnet.defaultSolution": "Tomb Trail.slnx",
     "[csharp]": {
         "editor.formatOnSave": true
     },
     "editor.codeActionsOnSave": {
-        "source.organizeImports": "always",
+        "source.organizeImports": "always"
     }
 }
