@@ -35,6 +35,11 @@ public class ItemListElementScript : MonoBehaviour {
                 gameController.AdjustPlayerHealth(healingObject.GetHealingEffect());
                 gameController.removeItemFromTile(playerPos.x, playerPos.y, healingObject);
                 break;
+            case QuestItemObject questItemObject:
+                gameController.playerController.SetCarriedItem(questItemObject);
+                gameController.removeItemFromTile(playerPos.x, playerPos.y, questItemObject);
+                gameController.infoTab.StandardLogMessage("You now carry " + questItemObject.name + ".");
+                break;
             default:
                 Debug.Log("Item Type pickup not Implemented");
                 break;

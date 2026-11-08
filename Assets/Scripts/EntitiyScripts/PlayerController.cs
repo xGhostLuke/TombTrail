@@ -10,6 +10,7 @@ public class PlayerController : EntityController {
     [SerializeField] private int xpToNextLevel = 100;
     [SerializeField] private int level = 1;
     [SerializeField] private int healthPerLevel = 10;
+    [SerializeField] private QuestItemObject carriedItem;
 
     private void Start() {
         // REMINDER: x and y needs to be adjusted if the Grid got changed by a lot
@@ -51,6 +52,14 @@ public class PlayerController : EntityController {
     protected override void Die() {
         base.Die();
         gameController.GameOver();
+    }
+
+    public QuestItemObject GetCarriedItem() {
+        return carriedItem;
+    }
+
+    public void SetCarriedItem(QuestItemObject item) {
+        carriedItem = item;
     }
 
     public void AddXp(int amount) {
