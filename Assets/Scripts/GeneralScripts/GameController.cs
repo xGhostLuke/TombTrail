@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour {
 
     //windows
     public InfoTabsScript infoTab;
+    public DialogueWindowScript dialogueWindow; // Optional: a scene without villagers needs none.
 
     [SerializeField] private EntityInfoTabScript entityInfoTabScript;
     [SerializeField] private GameObject itemsOnTile;
@@ -206,10 +207,11 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// True while <paramref name="owner"/> is allowed to act. Always false after game over.
+    /// True while <paramref name="owner"/> is allowed to act. Always false after game over and during a conversation.
     /// </summary>
     public bool IsMyTurn(TurnOwner owner) {
-        return !isGameOver && currentTurnOwner == owner;
+        bool inConversation = dialogueWindow != null && dialogueWindow.BlocksPlayer();
+        return !isGameOver && !inConversation && currentTurnOwner == owner;
     }
 
     public TurnOwner GetCurrentTurnOwner() {
