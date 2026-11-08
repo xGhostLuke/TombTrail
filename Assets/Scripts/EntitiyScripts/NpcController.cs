@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 public class NpcController : MonoBehaviour {
     [SerializeField] private GameController gameController;
     [SerializeField] private int x, y;
-    [SerializeField] private string greeting = "Villager: Welcome, traveler.";
+    [SerializeField] private Quest quest;
 
     private void Start() {
         gameController.SetTile(x, y, TileValue.Npc);
@@ -31,7 +31,35 @@ public class NpcController : MonoBehaviour {
     }
 
     private void Talk() {
-        gameController.infoTab.StandardLogMessage(greeting);
+        switch (quest.state) {
+            case QuestState.Open:
+                quest.state = QuestState.Accepted;
+                Say(quest.offerText);
+                break;
+            case QuestState.Accepted:
+                TryCompleteQuest();
+                break;
+            case QuestState.Done:
+                Say(quest.afterText);
+                break;
+        }
+    }
+
+    private void TryCompleteQuest() {
+        PlayerController player = gameController.playerController;
+        // The null check keeps a quest without a requested item from completing with empty hands.
+        if (player.GetCarriedItem() == null || player.GetCarriedItem() != quest.requestedItem) {
+            Say(quest.reminderText);
+            return;
+        }
+        player.SetCarriedItem(null);
+        quest.state = QuestState.Done;
+        Say(quest.completedText);
+        player.AddXp(quest.xpReward);
+    }
+
+    private void Say(string text) {
+        gameController.infoTab.StandardLogMessage(text);
         gameController.infoTab.ShowInteractionlog();
     }
 }
