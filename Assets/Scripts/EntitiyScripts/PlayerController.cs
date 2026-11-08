@@ -29,11 +29,12 @@ public class PlayerController : EntityController {
     }
 
     public override void Movement() {
+        // One action per frame: IsMyTurn is checked only once, so a second key could still move a dead player.
         if (Keyboard.current.wKey.wasPressedThisFrame) Move(0, -1, type);
-        if (Keyboard.current.sKey.wasPressedThisFrame) Move(0, 1, type);
-        if (Keyboard.current.dKey.wasPressedThisFrame) Move(1, 0, type);
-        if (Keyboard.current.aKey.wasPressedThisFrame) Move(-1, 0, type);
-        if (Keyboard.current.spaceKey.wasPressedThisFrame) Move(0, 0, type);
+        else if (Keyboard.current.sKey.wasPressedThisFrame) Move(0, 1, type);
+        else if (Keyboard.current.dKey.wasPressedThisFrame) Move(1, 0, type);
+        else if (Keyboard.current.aKey.wasPressedThisFrame) Move(-1, 0, type);
+        else if (Keyboard.current.spaceKey.wasPressedThisFrame) Move(0, 0, type);
     }
 
     public override void Attack() {
