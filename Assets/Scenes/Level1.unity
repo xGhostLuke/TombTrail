@@ -8151,7 +8151,7 @@ PrefabInstance:
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: 'itemDrops.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: f5f95f79f675d2f42a24a1dddc3af100, type: 2}
+      objectReference: {fileID: 11400000, guid: b1ec0d85cbeda7b4e8a59409e2fe588c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8572,11 +8572,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: x
-      value: 6
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: y
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: health
@@ -13641,11 +13641,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: x
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: y
-      value: 3
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 6878817737937797848, guid: 2baf2a08a9de4ed4098e975c0aca6630, type: 3}
       propertyPath: health
