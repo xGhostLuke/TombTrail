@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eeeff2bf5745cf49be9c51824de2360, type: 3}
+  m_Name: ParcelDelivery
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueObject
+  nodes:
+  - name: offer
+    text: My leg is hurt and I will not make it back. Will you take this parcel to
+      the villager in the first room?
+    answers:
+    - text: I'll take it.
+      next: accepted
+      action: 1
+    - text: I can't right now.
+      next: declined
+      action: 0
+  - name: accepted
+    text: Thank you. The villager will reward you for it.
+    answers: []
+  - name: declined
+    text: Please reconsider. I will wait here.
+    answers: []
+  - name: noRoom
+    text: You have no room for the parcel. Make some space and come back.
+    answers: []
+  - name: reminder
+    text: Please bring the parcel to the villager in the first room.
+    answers: []
+  - name: delivered
+    text: A parcel from the traveler? At last! Take this for your trouble.
+    answers: []
+  - name: after
+    text: Thank you for taking care of my parcel.
+    answers: []

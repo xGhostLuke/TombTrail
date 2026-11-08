@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eeeff2bf5745cf49be9c51824de2360, type: 3}
+  m_Name: RingQuest
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueObject
+  nodes:
+  - name: offer
+    text: A bat stole my silver ring and fled south. Will you bring it back?
+    answers:
+    - text: I'll get it back.
+      next: accepted
+      action: 1
+    - text: Not right now.
+      next: declined
+      action: 0
+  - name: accepted
+    text: Thank you! Be careful out there.
+    answers: []
+  - name: declined
+    text: I understand. Come back if you change your mind.
+    answers: []
+  - name: reminder
+    text: Please find my silver ring. The bat fled south.
+    answers: []
+  - name: completed
+    text: My ring! Thank you, you have earned this.
+    answers: []
+  - name: after
+    text: Thank you again for the ring.
+    answers: []
