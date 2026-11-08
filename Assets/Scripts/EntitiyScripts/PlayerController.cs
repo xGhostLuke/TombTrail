@@ -16,10 +16,14 @@ public class PlayerController : EntityController {
         UpdatePosition(x, y);
         type = TileValue.Player;
         status = EntityStatus.Neutral;
+        isAlive = true;
+        if (health <= 0) {
+            health = maxHealth;
+        }
     }
 
     private void Update() {
-        if (gameController.IsMyTurn(1)) {
+        if (gameController.IsMyTurn(TurnOwner.Player)) {
             Movement();
         }
     }
@@ -35,5 +39,10 @@ public class PlayerController : EntityController {
     public override void Attack() {
         throw new NotImplementedException();
         // Managed over GameController, works for now, maybe rework in the future
+    }
+
+    protected override void Die() {
+        base.Die();
+        gameController.GameOver();
     }
 }
