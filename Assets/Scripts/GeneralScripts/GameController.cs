@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Scripts;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -75,7 +76,7 @@ public class GameController : MonoBehaviour {
 
     private void Update() {
         PlayerAttack();
-        if (Mouse.current.rightButton.wasPressedThisFrame) {
+        if (Mouse.current.rightButton.wasPressedThisFrame && !IsPointerOverUi()) {
             entityInfoTabScript.SetActive(true);
             GetEntityInfo();
         }
@@ -315,7 +316,7 @@ public class GameController : MonoBehaviour {
 
     private void PlayerAttack() { //This is here for now, should be in the PlayerController tho. Update idk maybe this should stay here
         int attackDistance = 1;
-        if (!IsMyTurn(TurnOwner.Player) || !Mouse.current.leftButton.wasPressedThisFrame) {
+        if (!IsMyTurn(TurnOwner.Player) || !Mouse.current.leftButton.wasPressedThisFrame || IsPointerOverUi()) {
             return;
         }
         Vector2Int hovered = GetTileHoveredByMouse();
@@ -530,5 +531,12 @@ public class GameController : MonoBehaviour {
         GetTile(playerPos.x, playerPos.y).addItemToItemList(entry.Item);
         ReloadItemOnTileList(playerPos.x, playerPos.y);
         infoTab.StandardLogMessage("You drop " + entry.Item.name + ".");
+    }
+
+    /// <summary>
+    /// True while the mouse is over a window, so a click there does not also act on the map below.
+    /// </summary>
+    private bool IsPointerOverUi() {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }
