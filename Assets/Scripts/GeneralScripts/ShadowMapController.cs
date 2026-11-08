@@ -27,6 +27,8 @@ public class ShadowMapController : MonoBehaviour {
         playerPos = gamecontroller.LocatePlayer();
         size = gamecontroller.getMapSize();
         GenerateShadowMap();
+        // Has to stay behind GenerateShadowMap, which paints everything black. Update only reacts to position changes.
+        UpdateShadowMap();
     }
 
     void Update() {
