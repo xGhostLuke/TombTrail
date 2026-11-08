@@ -35,7 +35,7 @@ public abstract class EntityController : MonoBehaviour {
     public abstract void Movement();
     public abstract void Attack();
 
-    private void Awake() {
+    protected virtual void Awake() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         pathfindingScript = GameObject.FindGameObjectWithTag("Pathfinding").GetComponent<PathfindingScript>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();

@@ -14,9 +14,8 @@ public class EnemyController : EntityController {
 
     [SerializeField] private int xpReward = 5;
 
-    private void Awake() {
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    protected override void Awake() {
+        base.Awake();
         infoTab = gameController.infoTab;
     }
 
