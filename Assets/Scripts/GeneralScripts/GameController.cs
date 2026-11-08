@@ -505,11 +505,30 @@ public class GameController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Method to adjust the curent Player Health over the GameController object
+    /// Moves an item from the player's tile into the pack. A full pack leaves it on the tile.
     /// </summary>
-    /// <param name="adjust">int value to adjust</param>
-    public void AdjustPlayerHealth(int adjust) {
-        playerController.AdjustHealth(adjust);
-        Debug.Log("Increased Playerhealth by: " + adjust);
+    /// <param name="item">item lying on the player's tile</param>
+    public void PickUpItem(ItemObject item) {
+        if (!playerController.GetInventory().TryAdd(item)) {
+            infoTab.StandardLogMessage("No room for " + item.name + " in your pack.");
+            return;
+        }
+        Vector2Int playerPos = LocatePlayer();
+        removeItemFromTile(playerPos.x, playerPos.y, item);
+        infoTab.StandardLogMessage("You pick up " + item.name + ".");
+    }
+
+    /// <summary>
+    /// Moves an item from the pack onto the player's tile, from where it can be picked up again.
+    /// </summary>
+    /// <param name="entry">entry of the player's pack</param>
+    public void DropItem(InventoryEntry entry) {
+        if (isGameOver || !playerController.GetInventory().Remove(entry)) {
+            return;
+        }
+        Vector2Int playerPos = LocatePlayer();
+        GetTile(playerPos.x, playerPos.y).addItemToItemList(entry.Item);
+        ReloadItemOnTileList(playerPos.x, playerPos.y);
+        infoTab.StandardLogMessage("You drop " + entry.Item.name + ".");
     }
 }

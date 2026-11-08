@@ -47,12 +47,13 @@ public class NpcController : MonoBehaviour {
 
     private void TryCompleteQuest() {
         PlayerController player = gameController.playerController;
-        // The null check keeps a quest without a requested item from completing with empty hands.
-        if (player.GetCarriedItem() == null || player.GetCarriedItem() != quest.requestedItem) {
+        // Find returns null for a quest without a requested item, so it cannot complete with empty hands.
+        InventoryEntry entry = player.GetInventory().Find(quest.requestedItem);
+        if (entry == null) {
             Say(quest.reminderText);
             return;
         }
-        player.SetCarriedItem(null);
+        player.GetInventory().Remove(entry);
         quest.state = QuestState.Done;
         Say(quest.completedText);
         player.AddXp(quest.xpReward);

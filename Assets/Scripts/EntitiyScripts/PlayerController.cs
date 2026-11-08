@@ -10,7 +10,15 @@ public class PlayerController : EntityController {
     [SerializeField] private int xpToNextLevel = 100;
     [SerializeField] private int level = 1;
     [SerializeField] private int healthPerLevel = 10;
-    [SerializeField] private QuestItemObject carriedItem;
+    [SerializeField] private int inventoryWidth = 4;
+    [SerializeField] private int inventoryHeight = 3;
+    private Inventory inventory;
+
+    protected override void Awake() {
+        base.Awake();
+        // Built in Awake because every Awake runs before any Start, so the window can subscribe in its Start.
+        inventory = new Inventory(inventoryWidth, inventoryHeight);
+    }
 
     private void Start() {
         // REMINDER: x and y needs to be adjusted if the Grid got changed by a lot
@@ -54,12 +62,51 @@ public class PlayerController : EntityController {
         gameController.GameOver();
     }
 
-    public QuestItemObject GetCarriedItem() {
-        return carriedItem;
+    public Inventory GetInventory() {
+        return inventory;
     }
 
-    public void SetCarriedItem(QuestItemObject item) {
-        carriedItem = item;
+    /// <summary>
+    /// Uses an item from the pack. Only a use that really happens ends the turn.
+    /// </summary>
+    public void UseItem(InventoryEntry entry) {
+        if (!gameController.IsMyTurn(TurnOwner.Player)) {
+            return;
+        }
+        switch (entry.Item) {
+            case HealingObject potion:
+                DrinkPotion(entry, potion);
+                break;
+            case WeoponObeject weapon:
+                EquipWeapon(entry, weapon);
+                break;
+            default:
+                infoTab.StandardLogMessage("You cannot use " + entry.Item.name + ".");
+                break;
+        }
+    }
+
+    private void DrinkPotion(InventoryEntry entry, HealingObject potion) {
+        if (health >= maxHealth) {
+            infoTab.StandardLogMessage("You are already at full health.");
+            return;
+        }
+        inventory.Remove(entry);
+        AdjustHealth(potion.GetHealingEffect());
+        infoTab.StandardLogMessage("You drink " + potion.name + ".");
+        gameController.EndPlayerTurn();
+    }
+
+    private void EquipWeapon(InventoryEntry entry, WeoponObeject weapon) {
+        WeoponObeject previous = getEntityWeopon();
+        bool swapped = previous == null ? inventory.Remove(entry) : inventory.TryReplace(entry, previous);
+        if (!swapped) {
+            infoTab.StandardLogMessage("No room for " + previous.name + " in your pack.");
+            return;
+        }
+        gameController.setPlayerWeopon(weapon);
+        infoTab.StandardLogMessage("You equip " + weapon.name + ".");
+        gameController.EndPlayerTurn();
     }
 
     public void AddXp(int amount) {
